@@ -1,0 +1,199 @@
+src/
+├── index.html
+├── main.ts
+├── styles.css
+│
+├── environments/
+│   ├── environment.ts               ← dev
+│   ├── environment.staging.ts
+│   └── environment.prod.ts
+│
+└── app/
+    ├── app.component.ts             ← root component (just <router-outlet>)
+    ├── app.config.ts                ← providers (like Program.cs)
+    ├── app.routes.ts                ← root route tree
+    │
+    ├── core/                        ← singleton, app-wide, loaded ONCE
+    │   ├── services/
+    │   │   ├── auth.service.ts
+    │   │   ├── theme.service.ts
+    │   │   └── notification.service.ts
+    │   ├── guards/
+    │   │   ├── auth.guard.ts
+    │   │   ├── role.guard.ts
+    │   │   └── unsaved-changes.guard.ts
+    │   ├── interceptors/
+    │   │   ├── auth.interceptor.ts   ← attaches JWT token
+    │   │   ├── error.interceptor.ts  ← global error handling
+    │   │   └── loading.interceptor.ts
+    │   ├── models/
+    │   │   ├── auth.model.ts
+    │   │   └── app-config.model.ts
+    │   └── tokens/
+    │       └── app.tokens.ts         ← InjectionTokens
+    │
+    ├── layouts/                      ← layout shells (one per layout type)
+    │   ├── public-layout/
+    │   │   ├── public-layout.component.ts
+    │   │   ├── public-layout.component.html
+    │   │   ├── public-layout.component.css
+    │   │   └── components/
+    │   │       ├── public-header/
+    │   │       └── public-footer/
+    │   ├── dashboard-layout/
+    │   │   ├── dashboard-layout.component.ts
+    │   │   ├── dashboard-layout.component.html
+    │   │   ├── dashboard-layout.component.css
+    │   │   └── components/
+    │   │       ├── dashboard-sidebar/
+    │   │       └── dashboard-topbar/
+    │   └── auth-layout/
+    │       ├── auth-layout.component.ts
+    │       ├── auth-layout.component.html
+    │       ├── auth-layout.component.css
+    │       └── components/
+    │           └── auth-card/
+    │
+    ├── features/                     ← one folder per business domain
+    │   │
+    │   ├── auth/                     ← authentication domain
+    │   │   ├── pages/
+    │   │   │   ├── login/
+    │   │   │   │   ├── login.component.ts
+    │   │   │   │   ├── login.component.html
+    │   │   │   │   └── login.component.css
+    │   │   │   ├── register/
+    │   │   │   └── forgot-password/
+    │   │   ├── components/
+    │   │   │   └── password-strength/
+    │   │   ├── services/
+    │   │   │   └── auth-api.service.ts
+    │   │   ├── models/
+    │   │   │   ├── login.model.ts
+    │   │   │   └── auth-dto.model.ts
+    │   │   ├── resolvers/
+    │   │   └── auth.routes.ts
+    │   │
+    │   ├── blog/                     ← public blog domain
+    │   │   ├── pages/
+    │   │   │   ├── blog-list/
+    │   │   │   └── blog-detail/
+    │   │   ├── components/
+    │   │   │   ├── blog-card/
+    │   │   │   └── comment-form/
+    │   │   ├── services/
+    │   │   │   ├── blog.service.ts
+    │   │   │   └── comment.service.ts
+    │   │   ├── models/
+    │   │   │   ├── blog.model.ts
+    │   │   │   ├── blog-dto.model.ts
+    │   │   │   └── comment.model.ts
+    │   │   ├── resolvers/
+    │   │   │   └── blog-detail.resolver.ts
+    │   │   └── blog.routes.ts
+    │   │
+    │   └── dashboard/                ← dashboard domain (admin area)
+    │       ├── home/                 ← dashboard home page
+    │       │   ├── pages/
+    │       │   │   └── dashboard-home/
+    │       │   └── components/
+    │       │       ├── stats-card/
+    │       │       └── recent-activity/
+    │       │
+    │       ├── blog/                 ← blog management (same service, different UI)
+    │       │   ├── pages/
+    │       │   │   ├── blog-list/    ← admin table view
+    │       │   │   └── blog-detail/  ← admin edit view
+    │       │   ├── components/
+    │       │   │   └── blog-upsert-form/
+    │       │   └── dashboard-blog.routes.ts
+    │       │
+    │       ├── users/
+    │       │   ├── pages/
+    │       │   │   ├── user-list/
+    │       │   │   └── user-detail/
+    │       │   ├── components/
+    │       │   │   └── user-upsert-form/
+    │       │   ├── services/
+    │       │   │   └── user.service.ts
+    │       │   ├── models/
+    │       │   │   ├── user.model.ts
+    │       │   │   └── user-dto.model.ts
+    │       │   └── dashboard-users.routes.ts
+    │       │
+    │       └── dashboard.routes.ts   ← assembles all dashboard sub-routes
+    │
+    └── shared/                       ← reusable across ALL features
+        │
+        ├── components/               ← dumb/presentational UI components
+        │   ├── select/
+        │   │   ├── select.component.ts
+        │   │   ├── select.component.html
+        │   │   └── select.component.css
+        │   ├── textbox/
+        │   ├── textarea/
+        │   ├── checkbox/
+        │   ├── radio-group/
+        │   ├── datepicker/
+        │   ├── timepicker/
+        │   ├── readonly-field/
+        │   ├── button/
+        │   ├── modal/
+        │   ├── badge/
+        │   ├── avatar/
+        │   ├── spinner/
+        │   ├── empty-state/
+        │   └── data-table/
+        │
+        ├── forms/
+        │   ├── options/              ← options classes per input type
+        │   │   ├── base-field.options.ts
+        │   │   ├── textbox.options.ts
+        │   │   ├── select.options.ts
+        │   │   ├── checkbox.options.ts
+        │   │   ├── radio-group.options.ts
+        │   │   ├── datepicker.options.ts
+        │   │   ├── timepicker.options.ts
+        │   │   ├── readonly-field.options.ts
+        │   │   └── index.ts
+        │   ├── validators/
+        │   │   ├── date.validators.ts
+        │   │   └── common.validators.ts
+        │   └── helpers/
+        │       └── form.helper.ts
+        │
+        ├── models/                   ← base models/DTOs
+        │   ├── base.model.ts         ← BaseEntity, SoftDeletableEntity, AuditFields
+        │   ├── base-dto.model.ts     ← CreateDto, UpdateDto
+        │   ├── pagination.model.ts   ← PagedResult<T>, QueryParams
+        │   └── index.ts
+        │
+        ├── services/
+        │   └── base-api.service.ts   ← generic CRUD base
+        │
+        ├── pipes/
+        │   ├── timeago.pipe.ts
+        │   ├── filesize.pipe.ts
+        │   └── truncate.pipe.ts
+        │
+        ├── directives/
+        │   ├── highlight.directive.ts
+        │   └── click-outside.directive.ts
+        │
+        ├── utils/
+        │   ├── url-builder.ts
+        │   ├── string.utils.ts
+        │   ├── date.utils.ts
+        │   ├── number.utils.ts
+        │   ├── array.utils.ts
+        │   ├── object.utils.ts
+        │   └── file.utils.ts
+        │
+        ├── helpers/
+        │   ├── error.helper.ts
+        │   └── pagination.helper.ts
+        │
+        └── constants/
+            ├── app.constants.ts
+            ├── regex.constants.ts
+            └── api.constants.ts
