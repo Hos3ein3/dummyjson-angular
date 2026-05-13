@@ -1,0 +1,24 @@
+name: Build & Deploy Angular
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t dummyjson-frontend:latest .
+
+      - name: Redeploy container
+        run: |
+          docker compose -f ~/wwwroot/dummyjson/frontend/docker-compose.yml down || true
+          docker compose -f ~/wwwroot/dummyjson/frontend/docker-compose.yml up -d
+
+      - name: Clean up dangling images
+        run: docker image prune -f
