@@ -1,0 +1,229 @@
+
+==================================REGISTER ALL INTERCEPTORS==========================================
+
+// app.config.ts
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor,          // 1st — attach token
+        refreshTokenInterceptor,  // 2nd — handle 401 + refresh
+        errorInterceptor,         // 3rd — global error handling
+        loadingInterceptor,       // 4th — show/hide spinner
+        localeInterceptor,        // 5th — attach language header
+        cacheInterceptor,         // 6th — cache GET responses
+      ])
+    ),
+  ]
+};
+
+Order matters — interceptors run top to bottom on request, and bottom to top on response, like ASP.NET Core middleware pipeline.
+=========================================================================================
+
+
+// core/interceptors/auth.interceptor.ts
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const token = authService.getToken();
+
+  // Skip if no token or it's an auth endpoint
+  if (!token || req.url.includes('/auth/')) {
+    return next(req);
+  }
+
+  const cloned = req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return next(cloned);
+};
+
+// core/interceptors/error.interceptor.ts
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+import { NotificationService } from '@core/services/notification.service';
+
+export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+  const router          = inject(Router);
+  const authService     = inject(AuthService);
+  const notification    = inject(NotificationService);
+
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+
+      switch (error.status) {
+
+        case 401:   // Unauthorized — token expired or invalid
+          authService.logout();
+          router.navigate(['/auth/login']);
+          break;
+
+        case 403:   // Forbidden — no permission
+          notification.error('You do not have permission to perform this action.');
+          router.navigate(['/403']);
+          break;
+
+        case 404:   // Not found
+          notification.error('The requested resource was not found.');
+          break;
+
+        case 422:   // Validation error from backend
+        case 400:   // Bad request
+          // Let the component handle validation errors
+          // Don't show a global notification here
+          break;
+
+        case 500:   // Server error
+          notification.error('A server error occurred. Please try again later.');
+          break;
+
+        case 0:     // Network error / no connection
+          notification.error('No internet connection. Please check your network.');
+          break;
+
+        default:
+          notification.error('An unexpected error occurred.');
+      }
+
+      return throwError(() => error);
+    })
+  );
+};
+
+
+// core/interceptors/loading.interceptor.ts
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { finalize } from 'rxjs';
+import { LoadingService } from '@core/services/loading.service';
+
+export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+  const loadingService = inject(LoadingService);
+
+  // Skip requests that opt out (e.g. background polling)
+  if (req.headers.has('X-Skip-Loading')) {
+    return next(req.clone({ headers: req.headers.delete('X-Skip-Loading') }));
+  }
+
+  loadingService.show();
+
+  return next(req).pipe(
+    finalize(() => loadingService.hide())
+  );
+};
+
+==================================USAGE, SAMPLE==========================================
+
+
+// core/services/loading.service.ts
+@Injectable({ providedIn: 'root' })
+export class LoadingService {
+  private activeRequests = signal(0);
+  isLoading = computed(() => this.activeRequests() > 0);
+
+  show() { this.activeRequests.update(n => n + 1); }
+  hide() { this.activeRequests.update(n => Math.max(0, n - 1)); }
+}
+=========================================================================================
+
+
+
+// core/interceptors/refresh-token.interceptor.ts
+import { HttpInterceptorFn, HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { catchError, switchMap, throwError } from 'rxjs';
+import { AuthService } from '@core/services/auth.service';
+import { Router } from '@angular/router';
+
+export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const router      = inject(Router);
+
+  return next(req).pipe(
+    catchError((error: HttpErrorResponse) => {
+
+      // Only try refresh on 401 and not on the refresh endpoint itself
+      if (error.status !== HttpStatusCode.Unauthorized || req.url.includes('/auth/refresh')) {
+        return throwError(() => error);
+      }
+
+      // Try to refresh silently
+      return authService.refreshToken().pipe(
+        switchMap(newToken => {
+          authService.setToken(newToken.accessToken);
+
+          // Retry original request with new token
+          const retried = req.clone({
+            setHeaders: { Authorization: `Bearer ${newToken.accessToken}` }
+          });
+          return next(retried);
+        }),
+        catchError(refreshError => {
+          // Refresh also failed — logout and redirect
+          authService.logout();
+          router.navigate(['/auth/login']);
+          return throwError(() => refreshError);
+        })
+      );
+    })
+  );
+};
+
+
+// core/interceptors/locale.interceptor.ts
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { LocaleService } from '@core/services/locale.service';
+
+export const localeInterceptor: HttpInterceptorFn = (req, next) => {
+  const localeService = inject(LocaleService);
+
+  const cloned = req.clone({
+    setHeaders: {
+      'Accept-Language': localeService.currentLocale()  // 'en', 'it', 'fa'
+    }
+  });
+
+  return next(cloned);
+};
+
+
+// core/interceptors/cache.interceptor.ts
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { of, tap } from 'rxjs';
+import { CacheService } from '@core/services/cache.service';
+
+export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
+  const cacheService = inject(CacheService);
+
+  // Only cache GET requests
+  if (req.method !== 'GET') return next(req);
+
+  // Skip if request opts out
+  if (req.headers.has('X-No-Cache')) return next(req);
+
+  const cached = cacheService.get(req.url);
+  if (cached) return of(cached);   // return cached response immediately
+
+  return next(req).pipe(
+    tap(event => {
+      if (event instanceof HttpResponse) {
+        cacheService.set(req.url, event);
+      }
+    })
+  );
+};
+
+

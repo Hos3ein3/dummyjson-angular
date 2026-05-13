@@ -1,0 +1,13 @@
+// shared/constants/regex.constants.ts
+export const REGEX = {
+  EMAIL:       /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  PHONE:       /^\+?[\d\s\-().]{7,20}$/,
+  SLUG:        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+  URL:         /^https?:\/\/.+/,
+  PASSWORD:    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+  ZIP_ITALY:   /^\d{5}$/,
+  ZIP_NL:      /^\d{4}\s?[A-Z]{2}$/,    // Netherlands: 1234 AB
+  UUID:        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+  ONLY_DIGITS: /^\d+$/,
+  IBAN:        /^[A-Z]{2}\d{2}[A-Z0-9]{4,}$/,
+} as const;

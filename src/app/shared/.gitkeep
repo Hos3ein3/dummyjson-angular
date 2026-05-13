@@ -1,0 +1,16 @@
+// shared/components/index.ts
+export * from './textbox/textbox.component';
+export * from './select/select.component';
+export * from './datepicker/datepicker.component';
+export * from './button/button.component';
+export * from './modal/modal.component';
+export * from './spinner/spinner.component';
+export * from './empty-state/empty-state.component';
+
+
+// Instead of:
+import { TextboxComponent }  from '../../shared/components/textbox/textbox.component';
+import { SelectComponent }   from '../../shared/components/select/select.component';
+
+// You write:
+import { TextboxComponent, SelectComponent } from '@shared/components';

@@ -1,6 +1,35 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
+import { Products } from './pages/products/products';
+import { ProductDetail } from './pages/product-detail/product-detail';
+import { Recipes } from './pages/recipes/recipes';
+import { RecipeDetail } from './pages/recipe-detail/recipe-detail';
+import { Posts } from './pages/posts/posts';
+import { PostDetail } from './pages/post-detail/post-detail';
+import { Cart } from './pages/cart/cart';
 
-export const publicRoutes: Routes=[{
+export const publicRoutes: Routes=[
+  {
   path:'',component:Home
-}]
+  }
+  ,
+  {
+    path:'products',component:Products
+  },
+  {
+    path:'products/:id',component:ProductDetail
+  },
+  {
+    path:'recipes',component:Recipes
+  },
+  {
+    path:'recipes/:id' , component: RecipeDetail
+  },
+  {
+    path:'posts',component:Posts
+  },
+  {
+    path:'posts/:id',component:PostDetail
+  },
+  {path:'cart',component:Cart}
+]

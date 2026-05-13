@@ -15,10 +15,10 @@
         Browse thousands of products, explore delicious recipes, and read engaging posts — all in one beautifully crafted storefront.
       </p>
       <div class="flex flex-wrap gap-4 justify-center fade-in">
-        <a href="products.html" class="btn-primary px-8 py-3 text-base rounded-2xl">
+        <a routerLink="/products" class="btn-primary px-8 py-3 text-base rounded-2xl">
           Browse Products
         </a>
-        <a href="recipes.html" class="btn-glass px-8 py-3 text-base rounded-2xl">
+        <a routerLink="recipes" class="btn-glass px-8 py-3 text-base rounded-2xl">
           Explore Recipes
         </a>
       </div>
@@ -56,50 +56,10 @@
 </section>
 
 <!-- ═══════════════ FEATURED PRODUCTS ═══════════════ -->
-<section class="py-16 fade-in">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between mb-10">
-      <div>
-        <h2 class="text-3xl md:text-4xl font-bold" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Featured Products</h2>
-        <p class="mt-2 text-sm" style="color: var(--color-text-muted);">Handpicked for you</p>
-      </div>
-      <a href="products.html" class="btn-glass px-5 py-2 rounded-xl text-sm hidden sm:inline-flex">
-        View All <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="featured-products">
-      <!-- Skeleton loaders -->
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-    </div>
-    <div class="text-center mt-6 sm:hidden">
-      <a href="products.html" class="btn-glass px-6 py-2.5 rounded-xl text-sm">View All Products</a>
-    </div>
-  </div>
-</section>
+<app-feature-products />
 
 <!-- ═══════════════ RECIPE HIGHLIGHTS ═══════════════ -->
-<section class="py-16 fade-in">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between mb-10">
-      <div>
-        <h2 class="text-3xl md:text-4xl font-bold" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Recipe Highlights</h2>
-        <p class="mt-2 text-sm" style="color: var(--color-text-muted);">Delicious meals to try</p>
-      </div>
-      <a href="recipes.html" class="btn-glass px-5 py-2 rounded-xl text-sm hidden sm:inline-flex">
-        View All <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="featured-recipes">
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-      <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
-    </div>
-  </div>
-</section>
+<app-feature-recipes />
 
 <!-- ═══════════════ DAILY QUOTE ═══════════════ -->
 <section class="py-16 fade-in">
@@ -113,25 +73,7 @@
 </section>
 
 <!-- ═══════════════ RECENT POSTS ═══════════════ -->
-<section class="py-16 fade-in">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-end justify-between mb-10">
-      <div>
-        <h2 class="text-3xl md:text-4xl font-bold" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Recent Posts</h2>
-        <p class="mt-2 text-sm" style="color: var(--color-text-muted);">What people are talking about</p>
-      </div>
-      <a href="posts.html" class="btn-glass px-5 py-2 rounded-xl text-sm hidden sm:inline-flex">
-        View All
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="recent-posts">
-      <div class="glass-card rounded-2xl p-6"><div class="skeleton h-4 w-3/4 mb-3"></div><div class="skeleton h-3 w-full mb-2"></div><div class="skeleton h-3 w-full mb-2"></div><div class="skeleton h-3 w-2/3"></div></div>
-      <div class="glass-card rounded-2xl p-6"><div class="skeleton h-4 w-3/4 mb-3"></div><div class="skeleton h-3 w-full mb-2"></div><div class="skeleton h-3 w-full mb-2"></div><div class="skeleton h-3 w-2/3"></div></div>
-      <div class="glass-card rounded-2xl p-6"><div class="skeleton h-4 w-3/4 mb-3"></div><div class="skeleton h-3 w-full mb-2"></div><div class="skeleton h-3 w-full mb-2"></div><div class="skeleton h-3 w-2/3"></div></div>
-    </div>
-  </div>
-</section>
+<app-recent-posts />
 
 <!-- ═══════════════ CTA ═══════════════ -->
 <section class="py-20 fade-in">
@@ -140,8 +82,8 @@
       <h2 class="text-3xl md:text-4xl font-bold mb-4" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Ready to get started?</h2>
       <p class="mb-8 text-base" style="color: var(--color-text-muted);">Create an account and start exploring all the features DummyStore has to offer.</p>
       <div class="flex flex-wrap gap-4 justify-center">
-        <a href="signup.html" class="btn-primary px-8 py-3 text-base rounded-2xl">Create Account</a>
-        <a href="login.html" class="btn-glass px-8 py-3 text-base rounded-2xl">Login</a>
+        <a routerLink="/auth/signup" class="btn-primary px-8 py-3 text-base rounded-2xl">Create Account</a>
+        <a routerLink="/auth/login"  class="btn-glass px-8 py-3 text-base rounded-2xl">Login</a>
       </div>
     </div>
   </div>

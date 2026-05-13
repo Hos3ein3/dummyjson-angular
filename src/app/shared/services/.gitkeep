@@ -1,0 +1,65 @@
+// shared/services/base-api.service.ts
+import { inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface QueryParams {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  [key: string]: any;
+}
+
+export abstract class BaseApiService<T, TCreate = Partial<T>, TUpdate = Partial<T>> {
+
+  protected http = inject(HttpClient);
+
+  // Child class must provide its base URL segment
+  protected abstract baseUrl: string;
+
+  // ── Default CRUD — override any of these if needed ──
+
+  getAll(query?: QueryParams): Observable<PagedResult<T>> {
+    const params = this.buildParams(query);
+    return this.http.get<PagedResult<T>>(this.baseUrl, { params });
+  }
+
+  getById(id: string | number): Observable<T> {
+    return this.http.get<T>(UrlBuilder.combine(this.baseUrl, id));
+  }
+
+  create(payload: TCreate): Observable<T> {
+    return this.http.post<T>(this.baseUrl, payload);
+  }
+
+  update(id: string | number, payload: TUpdate): Observable<T> {
+    return this.http.put<T>(UrlBuilder.combine(this.baseUrl, id), payload);
+  }
+
+  patch(id: string | number, payload: Partial<TUpdate>): Observable<T> {
+    return this.http.patch<T>(UrlBuilder.combine(this.baseUrl, id), payload);
+  }
+
+  delete(id: string | number): Observable<void> {
+    return this.http.delete<void>(UrlBuilder.combine(this.baseUrl, id));
+  }
+
+  // ── Helper ───────────────────────────────────────────
+  private buildParams(query?: QueryParams): HttpParams {
+    let params = new HttpParams();
+    if (!query) return params;
+    Object.entries(query).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        params = params.set(key, String(value));
+      }
+    });
+    return params;
+  }
+}

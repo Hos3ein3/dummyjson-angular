@@ -1,0 +1,38 @@
+Environment-Typed Config
+Strongly typed environments — no magic strings:
+
+// shared/models/app-config.model.ts
+export interface AppConfig {
+  production: boolean;
+  apiUrl: string;
+  appName: string;
+  version: string;
+  features: {
+    analytics: boolean;
+    darkMode: boolean;
+    multiLanguage: boolean;
+  };
+}
+
+// environments/environment.ts
+import { AppConfig } from '@shared/models/app-config.model';
+
+export const environment: AppConfig = {
+  production: false,
+  apiUrl:     'https://localhost:5001/api',
+  appName:    'MyApp',
+  version:    '1.0.0',
+  features: {
+    analytics:     false,
+    darkMode:       true,
+    multiLanguage:  true,
+  }
+};
+
+
+
+
+
+
+
+

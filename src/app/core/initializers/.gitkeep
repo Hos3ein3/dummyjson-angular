@@ -1,0 +1,20 @@
+// core/initializers/app.initializer.ts
+export function appInitializer(
+  authService: AuthService,
+  featureFlags: FeatureFlagService
+) {
+  return (): Observable<void> =>
+    forkJoin([
+      authService.loadCurrentUser(),     // restore session
+      featureFlags.loadFromApi(),        // fetch feature flags
+    ]).pipe(mapTo(undefined));
+}
+
+// app.config.ts
+{
+  provide: APP_INITIALIZER,
+  useFactory: () => appInitializer(inject(AuthService), inject(FeatureFlagService)),
+  multi: true
+}
+
+

@@ -1,0 +1,326 @@
+// core/services/notification.service.ts
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
+
+export interface Toast {
+  id: string;
+  type: ToastType;
+  message: string;
+  duration: number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class NotificationService {
+  private toasts = signal<Toast[]>([]);
+  all = this.toasts.asReadonly();
+
+  success(message: string, duration = 4000) { this.add('success', message, duration); }
+  error(message: string,   duration = 5000) { this.add('error',   message, duration); }
+  warning(message: string, duration = 4000) { this.add('warning', message, duration); }
+  info(message: string,    duration = 3000) { this.add('info',    message, duration); }
+
+  private add(type: ToastType, message: string, duration: number) {
+    const id = crypto.randomUUID();
+    this.toasts.update(t => [...t, { id, type, message, duration }]);
+    setTimeout(() => this.remove(id), duration);
+  }
+
+  remove(id: string) {
+    this.toasts.update(t => t.filter(toast => toast.id !== id));
+  }
+}
+
+==================================USAGE, SAMPLE ==========================================
+<!-- core/components/toast-container/toast-container.component.html -->
+<div class="toast-container">
+  @for (toast of notification.all(); track toast.id) {
+    <div class="toast toast--{{ toast.type }}">
+      {{ toast.message }}
+      <button (click)="notification.remove(toast.id)">✕</button>
+    </div>
+  }
+</div>
+
+Place <app-toast-container /> once in app.component.html.
+=========================================================================================
+
+
+
+
+
+
+// core/services/auth.service.ts
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private http   = inject(HttpClient);
+  private router = inject(Router);
+
+  private _user  = signal<AuthUser | null>(null);
+  private _token = signal<string | null>(null);
+
+  user            = this._user.asReadonly();
+  token           = this._token.asReadonly();
+  isAuthenticated = computed(() => !!this._token());
+
+  login(dto: LoginDto): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
+      UrlBuilder.combine(environment.apiUrl, 'auth', 'login'), dto
+    ).pipe(
+      tap(res => {
+        this._token.set(res.accessToken);
+        this._user.set(res.user);
+      })
+    );
+  }
+
+  logout(): void {
+    this._token.set(null);
+    this._user.set(null);
+    this.router.navigate(['/auth/login']);
+  }
+
+  refreshToken(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(
+      UrlBuilder.combine(environment.apiUrl, 'auth', 'refresh'), {}
+    );
+  }
+
+  getToken(): string | null       { return this._token(); }
+  setToken(token: string): void   { this._token.set(token); }
+  getUserRoles(): string[]        { return this._user()?.roles ?? []; }
+  hasRole(role: string): boolean  { return this.getUserRoles().includes(role); }
+}
+
+
+
+
+
+State Management with Signals (No NgRx)
+For most apps a simple signal-based store per feature is enough:
+
+// features/blog/services/blog.store.ts
+@Injectable({ providedIn: 'root' })
+export class BlogStore {
+  private blogService = inject(BlogService);
+
+  // ── State ─────────────────────────────────────────────
+  private _posts      = signal<BlogPost[]>([]);
+  private _selected   = signal<BlogPost | null>(null);
+  private _loading    = signal(false);
+  private _error      = signal<string | null>(null);
+  private _pagination = signal(PaginationHelper.defaultState());
+
+  // ── Public readonly state ─────────────────────────────
+  posts      = this._posts.asReadonly();
+  selected   = this._selected.asReadonly();
+  loading    = this._loading.asReadonly();
+  error      = this._error.asReadonly();
+  pagination = this._pagination.asReadonly();
+
+  // ── Derived state ─────────────────────────────────────
+  publishedPosts = computed(() => this._posts().filter(p => p.status === 'published'));
+  totalCount     = computed(() => this._pagination().totalCount);
+
+  // ── Actions ───────────────────────────────────────────
+  loadAll(query?: QueryParams): void {
+    this._loading.set(true);
+    this._error.set(null);
+
+    this.blogService.getAll(query).subscribe({
+      next: result => {
+        this._posts.set(result.items);
+        this._pagination.update(p => ({ ...p, totalCount: result.totalCount }));
+        this._loading.set(false);
+      },
+      error: err => {
+        this._error.set(ErrorHelper.parse(err).message);
+        this._loading.set(false);
+      }
+    });
+  }
+
+  select(post: BlogPost | null): void {
+    this._selected.set(post);
+  }
+
+  create(dto: CreateBlogDto): Observable<BlogPost> {
+    return this.blogService.create(dto).pipe(
+      tap(post => this._posts.update(list => [post, ...list]))
+    );
+  }
+
+  update(id: string, dto: UpdateBlogDto): Observable<BlogPost> {
+    return this.blogService.update(id, dto).pipe(
+      tap(updated => this._posts.update(
+        list => list.map(p => p.id === id ? updated : p)
+      ))
+    );
+  }
+
+  delete(id: string): Observable<void> {
+    return this.blogService.delete(id).pipe(
+      tap(() => this._posts.update(list => list.filter(p => p.id !== id)))
+    );
+  }
+}
+
+
+==================================USAGE, SAMPLE ==========================================
+// Usage in a component — no service calls, only store
+export class BlogListComponent {
+  store = inject(BlogStore);
+
+  ngOnInit() { this.store.loadAll({ page: 1, pageSize: 10 }); }
+
+  delete(id: string) {
+    this.store.delete(id).subscribe();
+  }
+}
+
+@if (store.loading()) {
+  <app-spinner />
+} @else if (store.error()) {
+  <app-empty-state [message]="store.error()!" />
+} @else {
+  @for (post of store.posts(); track post.id) {
+    <app-blog-card [post]="post" />
+  }
+}
+=========================================================================================
+
+
+
+
+
+// core/tokens/http-context.tokens.ts
+import { HttpContextToken } from '@angular/common/http';
+
+export const SKIP_AUTH    = new HttpContextToken<boolean>(() => false);
+export const SKIP_LOADING = new HttpContextToken<boolean>(() => false);
+export const SKIP_ERROR   = new HttpContextToken<boolean>(() => false);
+export const CACHE_TTL    = new HttpContextToken<number>(() => 0);
+
+
+
+
+==================================USAGE, SAMPLE ==========================================
+// usage in any service — opts out per request
+this.http.get('/public-endpoint', {
+  context: new HttpContext().set(SKIP_AUTH, true).set(SKIP_LOADING, true)
+});
+
+// in auth.interceptor.ts — read the flag
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  if (req.context.get(SKIP_AUTH)) return next(req);
+  // ... attach token
+};
+
+
+=========================================================================================
+
+
+
+
+
+
+Destroy Ref (Auto Unsubscribe)
+The modern way to avoid memory leaks — no more ngOnDestroy + Subject:
+
+// OLD way — boilerplate heavy
+private destroy$ = new Subject<void>();
+
+ngOnInit() {
+  this.service.data$.pipe(takeUntil(this.destroy$)).subscribe();
+}
+ngOnDestroy() {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
+
+// MODERN way — one line
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+export class BlogListComponent {
+  private destroyRef = inject(DestroyRef);
+
+  ngOnInit() {
+    this.service.data$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// shared/services/confirm-dialog.service.ts
+@Injectable({ providedIn: 'root' })
+export class ConfirmDialogService {
+  private _visible  = signal(false);
+  private _message  = signal('');
+  private _resolve!: (result: boolean) => void;
+
+  visible = this._visible.asReadonly();
+  message = this._message.asReadonly();
+
+  confirm(message: string): Promise<boolean> {
+    this._message.set(message);
+    this._visible.set(true);
+
+    return new Promise(resolve => {
+      this._resolve = resolve;
+    });
+  }
+
+  accept(): void { this._resolve(true);  this._visible.set(false); }
+  decline(): void { this._resolve(false); this._visible.set(false); }
+}
+
+==================================USAGE, SAMPLE ==========================================
+// Usage in any component
+async onDelete(id: string) {
+  const confirmed = await this.confirmDialog.confirm(
+    'Are you sure you want to delete this post?'
+  );
+  if (confirmed) {
+    this.store.delete(id).subscribe();
+  }
+}
+=========================================================================================
+
+
+
+
+
+
+
+
+// core/services/feature-flag.service.ts
+@Injectable({ providedIn: 'root' })
+export class FeatureFlagService {
+  private flags = signal<Record<string, boolean>>({});
+
+  load(flags: Record<string, boolean>): void {
+    this.flags.set(flags);
+  }
+
+  isEnabled(flag: string): boolean {
+    return this.flags()[flag] ?? false;
+  }
+
+  // Use in templates
+  isEnabled$ = (flag: string) => computed(() => this.flags()[flag] ?? false);
+}
+==================================USAGE, SAMPLE ==========================================
+
+@if (featureFlags.isEnabled('analytics-dashboard')) {
+  <app-analytics-widget />
+}
+=========================================================================================

@@ -1,0 +1,86 @@
+// shared/forms/validators/date.validators.ts
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+export class DateValidators {
+
+  /** Value must be >= minDate */
+  static minDate(minDate: Date): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const value = new Date(control.value);
+      return value < minDate
+        ? { minDate: { required: minDate.toLocaleDateString(), actual: value.toLocaleDateString() } }
+        : null;
+    };
+  }
+
+  /** Value must be <= maxDate */
+  static maxDate(maxDate: Date): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const value = new Date(control.value);
+      return value > maxDate
+        ? { maxDate: { required: maxDate.toLocaleDateString(), actual: value.toLocaleDateString() } }
+        : null;
+    };
+  }
+
+  /** Value must be within N years from today */
+  static withinYears(years: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const value = new Date(control.value);
+      const today = new Date();
+      const limit = new Date();
+      limit.setFullYear(today.getFullYear() + years);
+
+      return value > limit
+        ? { withinYears: { years, limit: limit.toLocaleDateString() } }
+        : null;
+    };
+  }
+
+  /** Value must not be in the past */
+  static notPast(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const value = new Date(control.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return value < today
+        ? { notPast: { actual: value.toLocaleDateString() } }
+        : null;
+    };
+  }
+
+  /** Value must not be in the future */
+  static notFuture(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const value = new Date(control.value);
+      const today = new Date();
+      today.setHours(23, 59, 59, 999);
+      return value > today
+        ? { notFuture: { actual: value.toLocaleDateString() } }
+        : null;
+    };
+  }
+
+  /** Time must be within min/max range (HH:mm strings) */
+  static timeRange(minTime: string, maxTime: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+      const [minH, minM] = minTime.split(':').map(Number);
+      const [maxH, maxM] = maxTime.split(':').map(Number);
+      const [valH, valM] = (control.value as string).split(':').map(Number);
+      const toMin = (h: number, m: number) => h * 60 + m;
+
+      if (toMin(valH, valM) < toMin(minH, minM))
+        return { timeMin: { required: minTime, actual: control.value } };
+      if (toMin(valH, valM) > toMin(maxH, maxM))
+        return { timeMax: { required: maxTime, actual: control.value } };
+
+      return null;
+    };
+  }
+}

@@ -1,0 +1,78 @@
+// shared/components/textbox/textbox.component.ts
+import { Component, Input, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR,
+         ReactiveFormsModule, NgControl } from '@angular/forms';
+
+@Component({
+  selector: 'app-textbox',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `
+    <div class="field">
+      <label>{{ label }}</label>
+      <input
+        [type]="type"
+        [placeholder]="placeholder"
+        [value]="value"
+        [disabled]="isDisabled"
+        (input)="onInput($event)"
+        (blur)="onTouched()"
+      />
+      <!-- Show validation errors automatically -->
+      @if (showError) {
+        <span class="error">{{ errorMessage }}</span>
+      }
+    </div>
+  `,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TextboxComponent),
+      multi: true
+    }
+  ]
+})
+export class TextboxComponent implements ControlValueAccessor {
+  @Input() label = '';
+  @Input() placeholder = '';
+  @Input() type = 'text';
+
+  value = '';
+  isDisabled = false;
+
+  // CVA required callbacks
+  private onChange = (v: any) => {};
+  onTouched = () => {};
+
+  // Called by Angular when form value changes programmatically
+  writeValue(val: string) {
+    this.value = val ?? '';
+  }
+
+  registerOnChange(fn: any) { this.onChange = fn; }
+  registerOnTouched(fn: any) { this.onTouched = fn; }
+  setDisabledState(disabled: boolean) { this.isDisabled = disabled; }
+
+  onInput(event: Event) {
+    this.value = (event.target as HTMLInputElement).value;
+    this.onChange(this.value);
+  }
+
+  // Inject NgControl to read validation errors from parent form
+  constructor(public ngControl: NgControl) {
+    ngControl.valueAccessor = this;
+  }
+
+  get showError() {
+    return this.ngControl.invalid && this.ngControl.touched;
+  }
+
+  get errorMessage(): string {
+    const errors = this.ngControl.errors;
+    if (!errors) return '';
+    if (errors['required']) return `${this.label} is required`;
+    if (errors['email']) return 'Enter a valid email';
+    if (errors['minlength']) return `Min ${errors['minlength'].requiredLength} characters`;
+    return 'Invalid value';
+  }
+}

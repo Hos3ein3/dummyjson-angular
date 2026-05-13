@@ -1,0 +1,168 @@
+// core/guards/auth.guard.ts
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+
+export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router      = inject(Router);
+
+  if (authService.isAuthenticated()) {
+    return true;
+  }
+
+  // Save the attempted URL for redirect after login
+  return router.createUrlTree(['/auth/login'], {
+    queryParams: { returnUrl: state.url }
+  });
+};
+
+
+// core/guards/guest.guard.ts
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+
+export const guestGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router      = inject(Router);
+
+  // If already logged in, send to dashboard
+  if (authService.isAuthenticated()) {
+    return router.createUrlTree(['/dashboard']);
+  }
+
+  return true;
+};
+
+
+// core/guards/role.guard.ts
+import { inject } from '@angular/core';
+import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+
+export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const authService = inject(AuthService);
+  const router      = inject(Router);
+
+  // Roles required are defined in route data
+  const requiredRoles = route.data['roles'] as string[];
+  const userRoles     = authService.getUserRoles();
+
+  const hasRole = requiredRoles.some(role => userRoles.includes(role));
+
+  if (hasRole) return true;
+
+  return router.createUrlTree(['/403']);
+};
+
+==================================USAGE, SAMPLE==========================================
+// Usage in routes
+{
+  path: 'users',
+  component: UserListComponent,
+  canActivate: [authGuard, roleGuard],
+  data: { roles: ['Admin', 'SuperAdmin'] }   // ← roles defined here
+}
+
+
+=========================================================================================
+
+
+
+
+
+// core/guards/unsaved-changes.guard.ts
+import { CanDeactivateFn } from '@angular/router';
+
+// Interface your form components implement
+export interface HasUnsavedChanges {
+  hasUnsavedChanges(): boolean;
+}
+
+export const unsavedChangesGuard: CanDeactivateFn<HasUnsavedChanges> =
+  (component) => {
+
+    if (!component.hasUnsavedChanges()) return true;
+
+    return confirm('You have unsaved changes. Are you sure you want to leave?');
+    // Replace confirm() with a custom modal in production
+  };
+
+
+==================================USAGE, SAMPLE==========================================
+
+// Implement in any form component
+export class BlogDetailComponent implements HasUnsavedChanges {
+
+  hasUnsavedChanges(): boolean {
+    return this.form.dirty;   // Angular tracks this automatically
+  }
+}
+
+// Usage in routes
+{
+  path: ':id',
+  component: BlogDetailComponent,
+  canDeactivate: [unsavedChangesGuard]
+}
+
+=========================================================================================
+
+// core/guards/feature-flag.guard.ts
+import { inject } from '@angular/core';
+import { CanMatchFn, Router } from '@angular/router';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+
+export const featureFlagGuard: CanMatchFn = (route) => {
+  const featureFlags = inject(FeatureFlagService);
+  const router       = inject(Router);
+
+  const flag = route.data?.['featureFlag'] as string;
+
+  if (!flag || featureFlags.isEnabled(flag)) return true;
+
+  return router.createUrlTree(['/404']);
+};
+
+==================================USAGE, SAMPLE==========================================
+
+// Usage in routes
+{
+  path: 'analytics',
+  loadComponent: () => import('./analytics.component'),
+  canMatch: [featureFlagGuard],
+  data: { featureFlag: 'analytics-dashboard' }
+}
+
+=========================================================================================
+
+
+
+// features/auth/pages/login/login.component.ts
+export class LoginComponent {
+  private route  = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  onLoginSuccess() {
+    // Read the returnUrl saved by authGuard
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] ?? '/dashboard';
+    this.router.navigateByUrl(returnUrl);
+  }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+// features/auth/pages/login/login.component.ts
+export class LoginComponent {
+  private route  = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  onLoginSuccess() {
+    // Read the returnUrl saved by authGuard
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'] ?? '/dashboard';
+    this.router.navigateByUrl(returnUrl);
+  }
+}
+
+=========================================================================================

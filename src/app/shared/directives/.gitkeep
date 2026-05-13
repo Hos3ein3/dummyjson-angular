@@ -1,0 +1,404 @@
+// shared/directives/click-outside.directive.ts
+import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+
+@Directive({
+  selector: '[clickOutside]',
+  standalone: true
+})
+export class ClickOutsideDirective {
+  @Output() clickOutside = new EventEmitter<void>();
+
+  constructor(private el: ElementRef) {}
+
+  @HostListener('document:click', ['$event.target'])
+  onClick(target: HTMLElement) {
+    if (!this.el.nativeElement.contains(target)) {
+      this.clickOutside.emit();
+    }
+  }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<!-- usage -->
+<div class="dropdown" (clickOutside)="closeDropdown()">
+  ...
+</div>
+
+=========================================================================================
+
+
+// shared/directives/auto-focus.directive.ts
+import { AfterViewInit, Directive, ElementRef, Input } from '@angular/core';
+
+@Directive({
+  selector: '[autoFocus]',
+  standalone: true
+})
+export class AutoFocusDirective implements AfterViewInit {
+  @Input() autoFocus = true;   // can conditionally disable
+
+  constructor(private el: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+    if (this.autoFocus) {
+      setTimeout(() => this.el.nativeElement.focus(), 0);
+    }
+  }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<input appTextbox [autoFocus]="true" placeholder="Search..." />
+=========================================================================================
+
+
+// shared/directives/tooltip.directive.ts
+import {
+  Directive, Input, HostListener,
+  ElementRef, OnDestroy, Renderer2
+} from '@angular/core';
+
+@Directive({
+  selector: '[tooltip]',
+  standalone: true
+})
+export class TooltipDirective implements OnDestroy {
+  @Input() tooltip = '';
+  @Input() tooltipPosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
+
+  private tooltipEl: HTMLElement | null = null;
+
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  @HostListener('mouseenter') onEnter() { this.show(); }
+  @HostListener('mouseleave') onLeave() { this.hide(); }
+  @HostListener('focus')      onFocus() { this.show(); }
+  @HostListener('blur')       onBlur()  { this.hide(); }
+
+  private show() {
+    if (!this.tooltip) return;
+
+    this.tooltipEl = this.renderer.createElement('div');
+    this.renderer.addClass(this.tooltipEl, 'ng-tooltip');
+    this.renderer.addClass(this.tooltipEl, `ng-tooltip--${this.tooltipPosition}`);
+    this.renderer.setProperty(this.tooltipEl, 'textContent', this.tooltip);
+    this.renderer.appendChild(document.body, this.tooltipEl);
+
+    const rect = this.el.nativeElement.getBoundingClientRect();
+    this.setPosition(rect);
+  }
+
+  private hide() {
+    if (this.tooltipEl) {
+      this.renderer.removeChild(document.body, this.tooltipEl);
+      this.tooltipEl = null;
+    }
+  }
+
+  private setPosition(rect: DOMRect) {
+    if (!this.tooltipEl) return;
+    const el = this.tooltipEl;
+    const pos = {
+      top:    `${rect.top - el.offsetHeight - 8 + window.scrollY}px`,
+      bottom: `${rect.bottom + 8 + window.scrollY}px`,
+      left:   `${rect.left + rect.width / 2 - el.offsetWidth / 2}px`,
+    };
+    this.renderer.setStyle(el, 'top', this.tooltipPosition === 'bottom' ? pos.bottom : pos.top);
+    this.renderer.setStyle(el, 'left', pos.left);
+  }
+
+  ngOnDestroy() { this.hide(); }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+
+<button [tooltip]="'Delete this post'" tooltipPosition="top">
+  Delete
+</button>
+=========================================================================================
+
+
+
+// shared/directives/has-role.directive.ts
+import { Directive, inject, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
+
+@Directive({
+  selector: '[hasRole]',
+  standalone: true
+})
+export class HasRoleDirective implements OnInit {
+  @Input() hasRole: string | string[] = [];
+
+  private templateRef     = inject(TemplateRef);
+  private viewContainer   = inject(ViewContainerRef);
+  private authService     = inject(AuthService);
+
+  ngOnInit() {
+    const roles = Array.isArray(this.hasRole) ? this.hasRole : [this.hasRole];
+    const userRoles = this.authService.getUserRoles();
+    const hasAccess = roles.some(r => userRoles.includes(r));
+
+    if (hasAccess) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
+    } else {
+      this.viewContainer.clear();
+    }
+  }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<!-- structural directive — removes element from DOM entirely -->
+<button *hasRole="'Admin'">Delete User</button>
+<button *hasRole="['Admin', 'Editor']">Edit Post</button>
+=========================================================================================
+
+// shared/directives/copy-to-clipboard.directive.ts
+import { Directive, HostListener, Input, Output, EventEmitter } from '@angular/core';
+
+@Directive({
+  selector: '[copyToClipboard]',
+  standalone: true
+})
+export class CopyToClipboardDirective {
+  @Input() copyToClipboard = '';
+  @Output() copied = new EventEmitter<void>();
+
+  @HostListener('click')
+  async onClick() {
+    if (!this.copyToClipboard) return;
+
+    try {
+      await navigator.clipboard.writeText(this.copyToClipboard);
+      this.copied.emit();
+    } catch {
+      // Fallback for older browsers
+      const el = document.createElement('textarea');
+      el.value = this.copyToClipboard;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      this.copied.emit();
+    }
+  }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<span
+  [copyToClipboard]="user.id"
+  (copied)="showCopiedFeedback()"
+  style="cursor:pointer"
+>
+  {{ user.id }}
+</span>
+
+=========================================================================================
+
+
+// shared/directives/debounce-click.directive.ts
+import {
+  Directive, EventEmitter, HostListener,
+  Input, OnDestroy, Output
+} from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+@Directive({
+  selector: '[debounceClick]',
+  standalone: true
+})
+export class DebounceClickDirective implements OnDestroy {
+  @Input()  debounceTime = 500;
+  @Output() debounceClick = new EventEmitter<MouseEvent>();
+
+  private clicks   = new Subject<MouseEvent>();
+  private sub: Subscription;
+
+  constructor() {
+    this.sub = this.clicks.pipe(
+      debounceTime(this.debounceTime)
+    ).subscribe(e => this.debounceClick.emit(e));
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.clicks.next(event);
+  }
+
+  ngOnDestroy() { this.sub.unsubscribe(); }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<!-- prevents double-click form submissions -->
+<button (debounceClick)="onSubmit()" [debounceTime]="600">
+  Save
+</button>
+
+=========================================================================================
+
+
+
+// shared/directives/highlight.directive.ts
+import { Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[highlight]',
+  standalone: true
+})
+export class HighlightDirective implements OnChanges {
+  @Input() highlight = '';
+  @Input() highlightColor = '#fef08a';   // yellow by default
+
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  ngOnChanges() {
+    const text = this.el.nativeElement.innerText;
+    if (!this.highlight || !text) return;
+
+    const regex = new RegExp(`(${this.highlight})`, 'gi');
+    const replaced = text.replace(
+      regex,
+      `<mark style="background:${this.highlightColor};padding:0">$1</mark>`
+    );
+    this.renderer.setProperty(this.el.nativeElement, 'innerHTML', replaced);
+  }
+}
+
+
+==================================USAGE, SAMPLE==========================================
+
+<p [highlight]="searchTerm">
+  Angular is a platform for building web applications.
+</p>
+
+=========================================================================================
+
+
+// shared/directives/lazy-image.directive.ts
+import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+
+@Directive({
+  selector: 'img[lazyLoad]',
+  standalone: true
+})
+export class LazyImageDirective implements OnInit, OnDestroy {
+  @Input() lazyLoad = '';                  // the real src to load lazily
+  @Input() placeholder = '/assets/images/placeholder.webp';
+
+  private observer!: IntersectionObserver;
+
+  constructor(private el: ElementRef<HTMLImageElement>) {}
+
+  ngOnInit() {
+    this.el.nativeElement.src = this.placeholder;
+
+    this.observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        this.el.nativeElement.src = this.lazyLoad;
+        this.observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+
+    this.observer.observe(this.el.nativeElement);
+  }
+
+  ngOnDestroy() { this.observer?.disconnect(); }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<img
+  [lazyLoad]="post.coverImageUrl"
+  placeholder="/assets/images/placeholder.webp"
+  alt="Post cover"
+/>
+
+=========================================================================================
+
+
+// shared/directives/input-mask.directive.ts
+import { Directive, HostListener, Input, ElementRef } from '@angular/core';
+
+@Directive({
+  selector: '[inputMask]',
+  standalone: true
+})
+export class InputMaskDirective {
+  /**
+   * Mask format:
+   * 9 = digit only
+   * A = letter only
+   * * = any character
+   *
+   * Example: '9999-9999-9999' for card number
+   *          '+39 999 999 9999' for Italian phone
+   */
+  @Input() inputMask = '';
+
+  constructor(private el: ElementRef<HTMLInputElement>) {}
+
+  @HostListener('input', ['$event'])
+  onInput(event: InputEvent) {
+    const raw   = this.el.nativeElement.value.replace(/\D/g, '');
+    let result  = '';
+    let rawIdx  = 0;
+
+    for (const char of this.inputMask) {
+      if (rawIdx >= raw.length) break;
+      if (char === '9') {
+        result += raw[rawIdx++];
+      } else {
+        result += char;
+      }
+    }
+
+    this.el.nativeElement.value = result;
+  }
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<input [inputMask]="'+39 999 999 9999'" placeholder="+39 000 000 0000" />
+<input [inputMask]="'9999-9999-9999-9999'" placeholder="Card number" />
+
+=========================================================================================
+
+
+// shared/directives/scroll-to-error.directive.ts
+import { Directive, HostListener, ElementRef } from '@angular/core';
+
+@Directive({
+  selector: '[scrollToError]',
+  standalone: true
+})
+export class ScrollToErrorDirective {
+
+  @HostListener('submit')
+  onSubmit() {
+    // Small delay to let Angular update the DOM with error classes
+    setTimeout(() => {
+      const firstError = this.el.nativeElement.querySelector('.error, .ng-invalid');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  }
+
+  constructor(private el: ElementRef<HTMLFormElement>) {}
+}
+
+==================================USAGE, SAMPLE==========================================
+
+<form [formGroup]="form" (ngSubmit)="submit()" [scrollToError]>
+  ...
+</form>
+
+=========================================================================================

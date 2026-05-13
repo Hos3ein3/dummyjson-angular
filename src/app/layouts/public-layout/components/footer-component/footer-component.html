@@ -18,9 +18,9 @@
       <div>
         <h4 class="font-semibold mb-4" style="color: var(--color-text); font-family:'Outfit',sans-serif;">Explore</h4>
         <ul class="space-y-2.5">
-          <li><a href="products.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Products</a></li>
-          <li><a href="recipes.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Recipes</a></li>
-          <li><a href="posts.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Posts</a></li>
+          <li><a routerLink="/products" class="text-sm hover:underline" style="color: var(--color-text-muted);">Products</a></li>
+          <li><a routerLink="/recipes" class="text-sm hover:underline" style="color: var(--color-text-muted);">Recipes</a></li>
+          <li><a routerLink="/posts" class="text-sm hover:underline" style="color: var(--color-text-muted);">Posts</a></li>
         </ul>
       </div>
 
@@ -28,10 +28,10 @@
       <div>
         <h4 class="font-semibold mb-4" style="color: var(--color-text); font-family:'Outfit',sans-serif;">Account</h4>
         <ul class="space-y-2.5">
-          <li><a href="login.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Login</a></li>
-          <li><a href="signup.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Sign Up</a></li>
-          <li><a href="profile.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Profile</a></li>
-          <li><a href="cart.html" class="text-sm hover:underline" style="color: var(--color-text-muted);">Cart</a></li>
+          <li><a routerLink="/auth/login" class="text-sm hover:underline" style="color: var(--color-text-muted);">Login</a></li>
+          <li><a routerLink="/auth/signup" class="text-sm hover:underline" style="color: var(--color-text-muted);">Sign Up</a></li>
+          <li><a routerLink="/profile" class="text-sm hover:underline" style="color: var(--color-text-muted);">Profile</a></li>
+          <li><a routerLink="/cart" class="text-sm hover:underline" style="color: var(--color-text-muted);">Cart</a></li>
         </ul>
       </div>
 
@@ -47,7 +47,7 @@
 
     <div class="pt-6" style="border-top: 1px solid var(--glass-border);">
       <p class="text-center text-sm" style="color: var(--color-text-muted);">
-        &copy; new Date().getFullYear()  DummyStore — Powered by
+        &copy; {{currentYear}}  DummyStore — Powered by
         <a href="https://dummyjson.com" target="_blank" class="underline" style="color: var(--color-text-secondary);">DummyJSON</a>
       </p>
     </div>

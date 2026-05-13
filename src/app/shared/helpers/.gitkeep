@@ -1,0 +1,212 @@
+// shared/helpers/error.helper.ts
+import { HttpErrorResponse } from '@angular/common/http';
+
+export interface ApiError {
+  message: string;
+  statusCode: number;
+  errors: Record<string, string[]>;
+}
+
+export class ErrorHelper {
+
+  static parse(error: HttpErrorResponse): ApiError {
+    return {
+      statusCode: error.status,
+      message:    error.error?.message ?? error.message ?? 'Unexpected error',
+      errors:     error.error?.errors  ?? {}
+    };
+  }
+
+  static getValidationErrors(error: HttpErrorResponse): Record<string, string> {
+    const errors = error.error?.errors ?? {};
+    // Flatten arrays: { Email: ['required', 'invalid'] } → { email: 'required' }
+    return Object.fromEntries(
+      Object.entries(errors).map(([key, val]) => [
+        key.charAt(0).toLowerCase() + key.slice(1),  // PascalCase → camelCase
+        Array.isArray(val) ? (val as string[])[0] : val
+      ])
+    );
+  }
+
+  // Apply backend validation errors directly onto FormGroup controls
+  static applyToForm(error: HttpErrorResponse, form: any): void {
+    const validationErrors = ErrorHelper.getValidationErrors(error);
+    Object.entries(validationErrors).forEach(([field, message]) => {
+      const control = form.get(field);
+      if (control) {
+        control.setErrors({ serverError: message });
+        control.markAsTouched();
+      }
+    });
+  }
+
+  static isUnauthorized(e: HttpErrorResponse)    { return e.status === 401; }
+  static isForbidden(e: HttpErrorResponse)       { return e.status === 403; }
+  static isNotFound(e: HttpErrorResponse)        { return e.status === 404; }
+  static isValidation(e: HttpErrorResponse)      { return e.status === 422 || e.status === 400; }
+  static isServerError(e: HttpErrorResponse)     { return e.status >= 500; }
+}
+
+
+
+
+
+
+// shared/helpers/form.helper.ts
+import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+
+export class FormHelper {
+
+  static markAllTouched(form: FormGroup): void {
+    Object.values(form.controls).forEach(control => {
+      control.markAsTouched();
+      if ((control as FormGroup).controls) {
+        FormHelper.markAllTouched(control as FormGroup);
+      }
+    });
+  }
+
+  static getError(control: AbstractControl | null, label = 'Field'): string {
+    if (!control?.errors || !control.touched) return '';
+    return FormHelper.parseErrors(control.errors, label);
+  }
+
+  static parseErrors(errors: ValidationErrors, label = 'Field'): string {
+    if (errors['required'])     return `${label} is required`;
+    if (errors['email'])        return `Enter a valid email address`;
+    if (errors['minlength'])    return `Min ${errors['minlength'].requiredLength} characters`;
+    if (errors['maxlength'])    return `Max ${errors['maxlength'].requiredLength} characters`;
+    if (errors['min'])          return `Min value is ${errors['min'].min}`;
+    if (errors['max'])          return `Max value is ${errors['max'].max}`;
+    if (errors['pattern'])      return `${label} format is invalid`;
+    if (errors['minDate'])      return `Date must be after ${errors['minDate'].required}`;
+    if (errors['maxDate'])      return `Date must be before ${errors['maxDate'].required}`;
+    if (errors['withinYears'])  return `Date must be within ${errors['withinYears'].years} year(s)`;
+    if (errors['notPast'])      return `Date cannot be in the past`;
+    if (errors['notFuture'])    return `Date cannot be in the future`;
+    if (errors['timeMin'])      return `Time must be after ${errors['timeMin'].required}`;
+    if (errors['timeMax'])      return `Time must be before ${errors['timeMax'].required}`;
+    if (errors['mismatch'])     return `${label} does not match`;
+    return 'Invalid value';
+  }
+
+  static toCreatePayload<T extends object>(
+    form: FormGroup,
+    omitKeys: (keyof T)[] = []
+  ): Partial<T> {
+    return ObjectHelper.omit(form.value as T, omitKeys);
+  }
+
+  static toUpdatePayload<T extends object>(
+    form: FormGroup,
+    extras: Partial<T> = {}
+  ): Partial<T> {
+    return { ...form.value, ...extras };
+  }
+
+  static hasChanges(form: FormGroup, original: any): boolean {
+    return JSON.stringify(form.value) !== JSON.stringify(original);
+  }
+}
+
+
+// shared/helpers/pagination.helper.ts
+export interface PaginationState {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+}
+
+export interface PaginationInfo extends PaginationState {
+  totalPages: number;
+  hasPrev: boolean;
+  hasNext: boolean;
+  startIndex: number;     // e.g. 'Showing 11 - 20 of 45'
+  endIndex: number;
+  pages: number[];        // visible page numbers for UI
+}
+
+export class PaginationHelper {
+
+  static compute(state: PaginationState): PaginationInfo {
+    const totalPages = Math.ceil(state.totalCount / state.pageSize);
+    const startIndex = (state.page - 1) * state.pageSize + 1;
+    const endIndex   = Math.min(state.page * state.pageSize, state.totalCount);
+
+    return {
+      ...state,
+      totalPages,
+      hasPrev:    state.page > 1,
+      hasNext:    state.page < totalPages,
+      startIndex: state.totalCount === 0 ? 0 : startIndex,
+      endIndex,
+      pages:      PaginationHelper.visiblePages(state.page, totalPages)
+    };
+  }
+
+  // Returns page numbers for the UI: [1, 2, 3, '...', 10]
+  static visiblePages(current: number, total: number, delta = 2): number[] {
+    const range: number[] = [];
+    for (
+      let i = Math.max(1, current - delta);
+      i <= Math.min(total, current + delta);
+      i++
+    ) {
+      range.push(i);
+    }
+    return range;
+  }
+
+  static defaultState(pageSize = 10): PaginationState {
+    return { page: 1, pageSize, totalCount: 0 };
+  }
+}
+
+
+// shared/helpers/object.helper.ts
+export class ObjectHelper {
+
+  static clone<T>(obj: T): T {
+    return structuredClone(obj);
+  }
+
+  static stripNulls<T extends object>(obj: T): Partial<T> {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([, v]) => v !== null && v !== undefined)
+    ) as Partial<T>;
+  }
+
+  static isEqual(a: any, b: any): boolean {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
+
+  static isEmpty(obj: object): boolean {
+    return Object.keys(obj).length === 0;
+  }
+
+  static pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+    return keys.reduce((acc, key) => {
+      if (key in obj) acc[key] = obj[key];
+      return acc;
+    }, {} as Pick<T, K>);
+  }
+
+  static omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+    const clone = { ...obj };
+    keys.forEach(k => delete (clone as any)[k]);
+    return clone;
+  }
+
+  // Flatten nested object: { a: { b: 1 } } → { 'a.b': 1 }
+  static flatten(obj: object, prefix = ''): Record<string, any> {
+    return Object.entries(obj).reduce((acc, [key, val]) => {
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+      if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+        Object.assign(acc, ObjectHelper.flatten(val, fullKey));
+      } else {
+        acc[fullKey] = val;
+      }
+      return acc;
+    }, {} as Record<string, any>);
+  }
+}

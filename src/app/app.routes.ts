@@ -6,4 +6,10 @@ export const routes: Routes = [{
   component:PublicLayout,
   loadChildren:() => import('./features/public/public.routes')
     .then(x=>x.publicRoutes)
-}];
+},
+  {
+    path:'auth',
+    component:PublicLayout,
+    loadChildren:() =>import('./features/auth/auth.routes')
+      .then(x=>x.authRoutes)
+  }];
