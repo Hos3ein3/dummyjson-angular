@@ -48,4 +48,4 @@ const Theme = {
 };
 
 // Initialize on load
-document.addEventListener('DOMContentLoaded', () => Theme.init());
+//document.addEventListener('DOMContentLoaded', () => Theme.init());

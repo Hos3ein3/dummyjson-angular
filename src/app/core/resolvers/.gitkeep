@@ -1,0 +1,72 @@
+WITHOUT resolver:
+User clicks link → Component renders → ngOnInit fires → API call → loading spinner → data arrives → page updates
+
+WITH resolver:
+User clicks link → API call runs → data arrives → Component renders with data already available
+
+
+
+==================================USAGE, SAMPLE =========================================
+
+// features/blog/resolvers/blog-detail.resolver.ts
+import { inject } from '@angular/core';
+import { ResolveFn, RedirectCommand, Router } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { catchError, EMPTY } from 'rxjs';
+import { BlogService } from '../services/blog.service';
+import { BlogPost } from '../models/blog.model';
+
+export const blogDetailResolver: ResolveFn<BlogPost> =
+  (route: ActivatedRouteSnapshot) => {
+    const blogService = inject(BlogService);
+    const router      = inject(Router);
+
+    const id = route.paramMap.get('id')!;
+
+    return blogService.getById(id).pipe(
+      catchError(() => {
+        // Post not found — redirect to 404 instead of crashing
+        router.navigate(['/404']);
+        return EMPTY;
+      })
+    );
+  };
+
+
+  // features/blog/blog.routes.ts
+  export const BLOG_ROUTES: Routes = [
+    {
+      path: ':id',
+      component: BlogDetailComponent,
+      resolve: {
+        post: blogDetailResolver   // ← key name 'post' used in component
+      }
+    }
+  ];
+
+// features/blog/pages/blog-detail/blog-detail.component.ts
+export class BlogDetailComponent {
+  private route = inject(ActivatedRoute);
+
+  // Data is already here — no loading state needed
+  post = this.route.snapshot.data['post'] as BlogPost;
+}
+
+With withComponentInputBinding() — Even Cleaner
+If you have withComponentInputBinding() in your app.config.ts,
+ resolved data binds directly as @Input() — no ActivatedRoute injection at all:
+
+
+ export class BlogDetailComponent {
+   @Input() post!: BlogPost;   // automatically injected from resolver
+ }
+
+When to Use a Resolver
+✅ Use it on detail/edit pages where the component cannot render without the data (e.g. BlogDetail, UserEdit)
+
+✅ Use it when you want to redirect to 404 before the component even loads
+
+❌ Skip it on list pages with search/pagination — those need reactive loading anyway
+
+
+=========================================================================================

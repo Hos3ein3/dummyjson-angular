@@ -1,0 +1,52 @@
+CHECKLIST
+
+
+| Type        | Name                     | Job                                                                                                                      |
+| ----------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Directive   | ClickOutsideDirective    | Detects when user clicks anywhere outside the host element                                                               |
+| Directive   | AutoFocusDirective       | Automatically focuses an input element when it appears in the DOM                                                        |
+| Directive   | TooltipDirective         | Shows a floating text hint on hover or focus                                                                             |
+| Directive   | HasRoleDirective         | Removes element from DOM if user lacks the required role                                                                 |
+| Directive   | CopyToClipboardDirective | Copies a given string to clipboard on click                                                                              |
+| Directive   | DebounceClickDirective   | Emits a click event only after X ms of no repeated clicking                                                              |
+| Directive   | HighlightDirective       | Wraps a search term inside a text with a <mark> tag                                                                      |
+| Directive   | LazyImageDirective       | Swaps a placeholder src for the real image only when it enters the viewport                                              |
+| Directive   | InputMaskDirective       | Formats a text input as the user types (phone, card number, etc.)                                                        |
+| Directive   | ScrollToErrorDirective   | On form submit, scrolls the page to the first invalid control                                                            |
+| Pipe        | TimeAgoPipe              | Converts a date into a human-readable relative string like "3h ago"                                                      |
+| Pipe        | TruncatePipe             | Cuts a long string at a given character limit and appends a suffix                                                       |
+| Pipe        | FileSizePipe             | Converts a raw byte number into a readable string like "2.4 MB"                                                          |
+| Pipe        | CurrencyFormatPipe       | Formats a number as a locale-aware currency string                                                                       |
+| Pipe        | SafeHtmlPipe             | Marks an HTML string as trusted so Angular renders it without stripping tags                                             |
+| Pipe        | DefaultPipe              | Returns a fallback value when the input is null, undefined, or empty                                                     |
+| Pipe        | EnumLabelPipe            | Converts an enum key like IN_REVIEW into a readable label like "In Review"                                               |
+| Pipe        | InitialsPipe             | Extracts initials from a full name e.g. "Mohammad Hosein" → "MH"                                                         |
+| Pipe        | HighlightPipe            | Wraps a matched search term in a <mark> inside a bound HTML string                                                       |
+| Pipe        | PluralPipe               | Returns "1 comment" or "5 comments" based on a count                                                                     |
+| Guard       | authGuard                | Blocks access to a route if the user is not logged in, redirects to login                                                |
+| Guard       | guestGuard               | Blocks auth pages if user is already logged in, redirects to dashboard                                                   |
+| Guard       | roleGuard                | Blocks access if user does not have one of the roles defined in route data.roles                                         |
+| Guard       | unsavedChangesGuard      | Warns the user before leaving a page that has unsaved form changes                                                       |
+| Guard       | featureFlagGuard         | Hides a route entirely if the feature flag in data.featureFlag is disabled                                               |
+| Interceptor | authInterceptor          | Attaches the JWT Authorization: Bearer header to every outgoing request                                                  |
+| Interceptor | refreshTokenInterceptor  | On a 401 silently requests a new access token and retries the original request                                           |
+| Interceptor | errorInterceptor         | Catches HTTP errors globally and triggers notifications or redirects based on status code                                |
+| Interceptor | loadingInterceptor       | Calls LoadingService.show() when a request starts and hide() when it finishes                                            |
+| Interceptor | localeInterceptor        | Attaches the Accept-Language header to every request based on current app locale                                         |
+| Interceptor | cacheInterceptor         | Returns a cached response for GET requests instead of hitting the server again                                           |
+| Helper      | FormHelper               | Marks all controls as touched, parses validation errors, applies server-side errors onto form controls                   |
+| Helper      | ErrorHelper              | Parses HttpErrorResponse into a clean object, maps backend field errors to camelCase, checks status codes                |
+| Helper      | PaginationHelper         | Computes total pages, prev/next flags, visible page numbers, and start/end index from a pagination state                 |
+| Helper      | ObjectHelper             | Deep clones objects, strips nulls, picks/omits keys, flattens nested objects, compares equality                          |
+| Utility     | StringUtils              | Converts strings to slug/camelCase/PascalCase, truncates, extracts initials, computes reading time, masks sensitive text |
+| Utility     | DateUtils                | Formats dates, adds days/months, computes differences, checks past/future, converts to ISO string                        |
+| Utility     | ArrayUtils               | Groups by key, removes duplicates, sorts, chunks into pages, flattens, toggles item in array                             |
+| Utility     | NumberUtils              | Formats currency and percentages, clamps a value, abbreviates large numbers like "1.5K"                                  |
+| Utility     | FileUtils                | Converts file to Base64, validates type and size, triggers browser download, extracts file extension                     |
+| Utility     | StorageService           | In-memory key-value store — safe replacement for localStorage                                                            |
+| Service     | NotificationService      | Manages a list of toast messages with auto-dismiss by type (success, error, warning, info)                               |
+| Service     | AuthService              | Holds the current user and token as signals, handles login/logout/refresh                                                |
+| Service     | LoadingService           | Tracks how many HTTP requests are active and exposes an isLoading signal                                                 |
+| Service     | ConfirmDialogService     | Shows a confirmation prompt and returns a Promise<boolean>                                                               |
+| Service     | FeatureFlagService       | Holds a map of feature flags and tells you if a given flag is enabled                                                    |
+| Service     | BlogStore                | Signal-based state container — holds list, selected item, loading, error, and pagination state                           |

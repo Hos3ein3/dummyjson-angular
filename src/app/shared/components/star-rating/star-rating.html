@@ -1,0 +1,13 @@
+<div class="stars">
+  @for (_ of fullStars; track $index) {
+    <span class="star filled">★</span>
+  }
+
+  @if (hasHalfStar) {
+    <span class="star filled">★</span>
+  }
+
+  @for (_ of emptyStars; track $index) {
+    <span class="star">★</span>
+  }
+</div>

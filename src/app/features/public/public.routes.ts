@@ -7,6 +7,7 @@ import { RecipeDetail } from './pages/recipe-detail/recipe-detail';
 import { Posts } from './pages/posts/posts';
 import { PostDetail } from './pages/post-detail/post-detail';
 import { Cart } from './pages/cart/cart';
+import { Profile } from './pages/profile/profile';
 
 export const publicRoutes: Routes=[
   {
@@ -31,5 +32,6 @@ export const publicRoutes: Routes=[
   {
     path:'posts/:id',component:PostDetail
   },
-  {path:'cart',component:Cart}
+  {path:'cart',component:Cart},
+  {path:'profile',component:Profile}
 ]

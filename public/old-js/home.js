@@ -2,13 +2,13 @@
    DummyStore — Home Page Logic
    ============================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadStats();
-  loadFeaturedProducts();
-  loadFeaturedRecipes();
-  loadDailyQuote();
-  loadRecentPosts();
-});
+//document.addEventListener('DOMContentLoaded', () => {
+  //loadStats();
+  //loadFeaturedProducts();
+  //loadFeaturedRecipes();
+  //loadDailyQuote();
+  //loadRecentPosts();
+//});
 
 // ── Stats ──
 async function loadStats() {

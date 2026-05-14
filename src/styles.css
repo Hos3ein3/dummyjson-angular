@@ -1,6 +1,37 @@
-@import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
 /* ── Theme Variables ── */
+
+.card-enter {
+  animation: cardEnter 1500ms ease-out both;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.skeleton-leave {
+  animation: skeletonLeave 500ms ease forwards;
+}
+
+@keyframes skeletonLeave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 :root {
   --color-primary: #170C79;
   --color-secondary: #EFE3CA;

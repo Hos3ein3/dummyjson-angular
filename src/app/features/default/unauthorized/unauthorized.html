@@ -1,0 +1,24 @@
+<section class="min-h-[calc(100vh-4rem)] flex items-center py-16">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div class="glass-card rounded-[2rem] p-8 md:p-12 text-center fade-in visible">
+      <div class="relative mx-auto mb-6 w-28 h-28">
+        <div class="absolute inset-0 rounded-[2rem]" style="background: var(--glass-bg-hover); filter: blur(16px);"></div>
+        <div class="relative w-28 h-28 rounded-[2rem] glass flex items-center justify-center">
+         <app-lock-icon />
+        </div>
+      </div>
+
+      <span class="badge mb-4">403 Error</span>
+      <h1 class="text-6xl md:text-8xl font-extrabold text-gradient">403</h1>
+      <h2 class="text-2xl md:text-3xl font-bold mt-4" style="color: var(--color-text);">Access denied</h2>
+      <p class="mt-3 max-w-xl mx-auto text-sm md:text-base" style="color: var(--color-text-muted);">
+        You don’t have permission to view this page with your current account.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+        <a routerLink="/" class="btn-primary px-6 py-3 rounded-xl">Go Home</a>
+        <a routerLink="/auth/login" class="btn-glass px-6 py-3 rounded-xl">Sign In Again</a>
+      </div>
+    </div>
+  </div>
+</section>

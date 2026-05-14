@@ -1,0 +1,53 @@
+<section class="py-8 fade-in">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="glass-card rounded-2xl p-6 md:p-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+
+        <div>
+          @if (totalProducts() === 0) {
+            <div class="skeleton skeleton-stat mx-auto mb-1"></div>
+          } @else {
+            <div class="text-3xl md:text-4xl font-extrabold mb-1" style="font-family:'Outfit',sans-serif; color: var(--color-text);">
+              {{ animatedProducts() }}
+            </div>
+          }
+          <div class="text-sm font-medium" style="color: var(--color-text-muted);">Products</div>
+        </div>
+
+        <div>
+          @if (totalRecipes() === 0) {
+            <div class="skeleton skeleton-stat mx-auto mb-1"></div>
+          } @else {
+            <div class="text-3xl md:text-4xl font-extrabold mb-1" style="font-family:'Outfit',sans-serif; color: var(--color-text);">
+              {{ animatedRecipes() }}
+            </div>
+          }
+          <div class="text-sm font-medium" style="color: var(--color-text-muted);">Recipes</div>
+        </div>
+
+        <div>
+          @if (totalPosts() === 0) {
+            <div class="skeleton skeleton-stat mx-auto mb-1"></div>
+          } @else {
+            <div class="text-3xl md:text-4xl font-extrabold mb-1" style="font-family:'Outfit',sans-serif; color: var(--color-text);">
+              {{ animatedPosts() }}
+            </div>
+          }
+          <div class="text-sm font-medium" style="color: var(--color-text-muted);">Posts</div>
+        </div>
+
+        <div>
+          @if (totalQuotes() === 0) {
+            <div class="skeleton skeleton-stat mx-auto mb-1"></div>
+          } @else {
+            <div class="text-3xl md:text-4xl font-extrabold mb-1" style="font-family:'Outfit',sans-serif; color: var(--color-text);">
+              {{ animatedQuotes() | number:'1.0-0' }}
+            </div>
+          }
+          <div class="text-sm font-medium" style="color: var(--color-text-muted);">Quotes</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

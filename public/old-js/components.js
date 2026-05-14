@@ -356,11 +356,11 @@ function updateCartBadge() {
 
 // ── Init common elements on every page ──
 document.addEventListener('DOMContentLoaded', () => {
-  renderNavbar();
-  renderFooter();
-  setTimeout(initScrollAnimations, 100);
-  setTimeout(updateCartBadge, 200);
+  // renderNavbar();
+  // renderFooter();
+  //setTimeout(initScrollAnimations, 100);
+  //setTimeout(updateCartBadge, 200);
 
   // Update cart badge on changes
-  window.addEventListener('cartUpdated', () => { renderNavbar(); updateCartBadge(); });
+  //window.addEventListener('cartUpdated', () => { renderNavbar(); updateCartBadge(); });
 });
