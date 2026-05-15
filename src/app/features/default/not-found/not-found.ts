@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-not-found',
@@ -7,4 +7,14 @@ import { RouterLink } from '@angular/router';
   templateUrl: './not-found.html',
   styleUrl: './not-found.css',
 })
-export class NotFound {}
+export class NotFound {
+  private router = inject(Router);
+
+  // Read the returnUrl passed via router state
+  protected returnUrl: string =
+    this.router.lastSuccessfulNavigation()?.extras?.state?.['returnUrl'] ?? '/';
+
+  goBack() {
+    this.router.navigate([this.returnUrl]);
+  }
+}

@@ -8,6 +8,7 @@ import { Posts } from './pages/posts/posts';
 import { PostDetail } from './pages/post-detail/post-detail';
 import { Cart } from './pages/cart/cart';
 import { Profile } from './pages/profile/profile';
+import { productResolver } from '@core/resolvers/product.resolver';
 
 export const publicRoutes: Routes=[
   {
@@ -18,7 +19,12 @@ export const publicRoutes: Routes=[
     path:'products',component:Products
   },
   {
-    path:'products/:id',component:ProductDetail
+    path:'products/:id',loadComponent:()=>
+      import('./pages/product-detail/product-detail')
+      .then(x=>x.ProductDetail),
+    resolve:{
+      product:productResolver
+    }
   },
   {
     path:'recipes',component:Recipes

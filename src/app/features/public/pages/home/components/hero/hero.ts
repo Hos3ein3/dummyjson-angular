@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {RouterLink} from "@angular/router";
+import { UrlBuilder } from '@shared/utils/url-builder';
 
 @Component({
   selector: 'app-hero',
@@ -7,4 +8,6 @@ import {RouterLink} from "@angular/router";
   templateUrl: './hero.html',
   styleUrl: './hero.css',
 })
-export class Hero {}
+export class Hero {
+  protected readonly UrlBuilder = UrlBuilder;
+}

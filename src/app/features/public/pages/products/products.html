@@ -1,1 +1,53 @@
-<p>products works!</p>
+<!--<app-total-item [totalItem]="products()" />-->
+
+<section class="pt-8 pb-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-3xl md:text-4xl font-bold mb-2 fade-in" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Products</h1>
+    <p class="text-sm fade-in" style="color: var(--color-text-muted);">
+      @if (products()) {
+        <span animate.enter="card-enter">
+
+        Showing <span >{{ skip }} of {{ products()!.total | number:'1.0-0' }}</span> products
+        </span>
+      } @else {
+        <span class="skeleton skeleton-text"></span>
+      }
+    </p>
+  </div>
+</section>
+
+
+<app-filtering/>
+
+<section class="py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="products-grid">
+      <!-- Skeleton loaders -->
+      @if(products()===undefined)
+      {
+
+          <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
+          <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
+          <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
+          <div class="glass-card rounded-2xl p-4"><div class="skeleton h-48 mb-4"></div><div class="skeleton h-4 w-3/4 mb-2"></div><div class="skeleton h-4 w-1/2"></div></div>
+
+
+          } @else {
+
+        @for (item of products()?.items; track item.id) {
+
+          <app-product-item [item]="item" />
+        }
+
+      }
+
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination-container">
+
+
+
+    </div>
+  </div>
+</section>

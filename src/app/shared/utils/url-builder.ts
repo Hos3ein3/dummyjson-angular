@@ -54,4 +54,25 @@ export class UrlBuilder {
 
     return `${url}?${query}`;
   }
+
+  /**
+   * Builds a clean router path from segments. Designed for Angular [routerLink].
+   *
+   * UrlBuilder.route('products', item.id)        → '/products/42'
+   * UrlBuilder.route('products', item.id, 'edit') → '/products/42/edit'
+   * UrlBuilder.route('/')                         → '/'
+   */
+  static route(...segments: (string | number | null | undefined)[]): string {
+    const parts = segments
+      .filter((s) => s !== null && s !== undefined && s !== '')
+      .map((s) =>
+        String(s)
+          .trim()
+          .replace(/^\/+|\/+$/g, ''),
+      );
+
+    if (parts.length === 0) return '/';
+
+    return '/' + parts.join('/');
+  }
 }

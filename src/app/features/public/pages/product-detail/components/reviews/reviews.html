@@ -1,0 +1,56 @@
+<section class="py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2
+      class="text-2xl font-bold mb-6"
+      style="font-family:'Outfit',sans-serif; color: var(--color-text);"
+    >
+      Customer Reviews
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="reviews-container">
+      @if (product.reviews!==undefined&& product.reviews.length) {
+        @for (review of product.reviews; track review.reviewerEmail ?? $index) {
+          <div class="glass-card rounded-xl p-5 fade-in">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm"
+                  style="background: var(--btn-bg); color: var(--btn-text);"
+                >
+                  {{ review.reviewerName!.charAt(0) || 'U' }}
+                </div>
+
+                <div>
+                  <div class="font-semibold text-sm" style="color: var(--color-text)">
+                    {{ review.reviewerName || 'Anonymous' }}
+                  </div>
+                  <div class="text-xs" style="color: var(--color-text-muted)">
+                    {{ review.date | date:'mediumDate' }}
+                  </div>
+                </div>
+              </div>
+
+              <app-star-rating [rating]="review.rating" />
+            </div>
+
+            <p class="text-sm" style="color: var(--color-text-secondary)">
+              {{ review.comment }}
+            </p>
+          </div>
+        }
+      } @else {
+        <div class="glass-card rounded-xl p-5">
+          <div class="skeleton h-4 w-1/2 mb-2"></div>
+          <div class="skeleton h-3 w-full mb-1"></div>
+          <div class="skeleton h-3 w-3/4"></div>
+        </div>
+
+        <div class="glass-card rounded-xl p-5">
+          <div class="skeleton h-4 w-1/2 mb-2"></div>
+          <div class="skeleton h-3 w-full mb-1"></div>
+          <div class="skeleton h-3 w-3/4"></div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

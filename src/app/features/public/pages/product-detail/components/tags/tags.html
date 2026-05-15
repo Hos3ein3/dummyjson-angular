@@ -1,0 +1,7 @@
+@if (product.tags!==undefined && product.tags.length) {
+  <div class="flex flex-wrap gap-2 mb-6">
+    @for (tag of product.tags; track tag) {
+      <span class="chip">{{ tag }}</span>
+    }
+  </div>
+}

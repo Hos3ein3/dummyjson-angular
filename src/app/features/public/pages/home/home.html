@@ -28,8 +28,8 @@
       <h2 class="text-3xl md:text-4xl font-bold mb-4" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Ready to get started?</h2>
       <p class="mb-8 text-base" style="color: var(--color-text-muted);">Create an account and start exploring all the features DummyStore has to offer.</p>
       <div class="flex flex-wrap gap-4 justify-center">
-        <a routerLink="/auth/signup" class="btn-primary px-8 py-3 text-base rounded-2xl">Create Account</a>
-        <a routerLink="/auth/login"  class="btn-glass px-8 py-3 text-base rounded-2xl">Login</a>
+        <a [routerLink]="UrlBuilder.route('auth','signup')" class="btn-primary px-8 py-3 text-base rounded-2xl">Create Account</a>
+        <a [routerLink]="UrlBuilder.route('auth','login')"  class="btn-glass px-8 py-3 text-base rounded-2xl">Login</a>
       </div>
     </div>
   </div>

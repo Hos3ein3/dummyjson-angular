@@ -13,10 +13,10 @@
         Browse thousands of products, explore delicious recipes, and read engaging posts — all in one beautifully crafted storefront.
       </p>
       <div class="flex flex-wrap gap-4 justify-center fade-in">
-        <a routerLink="/products" class="btn-primary px-8 py-3 text-base rounded-2xl">
+        <a [routerLink]="UrlBuilder.route('products')" class="btn-primary px-8 py-3 text-base rounded-2xl">
           Browse Products
         </a>
-        <a routerLink="recipes" class="btn-glass px-8 py-3 text-base rounded-2xl">
+        <a [routerLink]="UrlBuilder.route('recipes')" class="btn-glass px-8 py-3 text-base rounded-2xl">
           Explore Recipes
         </a>
       </div>

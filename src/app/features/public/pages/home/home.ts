@@ -17,6 +17,7 @@ import { RecipeService } from '@shared/services/recipe.service';
 import { PostService } from '@shared/services/post.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { environment } from '../../../../../environments/environment';
+import { UrlBuilder } from '@shared/utils/url-builder';
 
 @Component({
   selector: 'app-home',
@@ -77,4 +78,5 @@ export class Home implements OnInit {
 
   //BUT
   //Note: with forkJoin, if any one request fails, the entire thing errors and no data is set.
+  protected readonly UrlBuilder = UrlBuilder;
 }

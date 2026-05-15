@@ -14,9 +14,9 @@
         <!-- Desktop Nav Links -->
         <div class="hidden md:flex items-center gap-7">
           <a routerLink="/"  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link ">Home</a>
-          <a routerLink="/products" routerLinkActive="active" class="nav-link ">Products</a>
-          <a routerLink="/recipes" routerLinkActive="active" class="nav-link ">Recipes</a>
-          <a routerLink="/posts" routerLinkActive="active" class="nav-link ">Posts</a>
+          <a [routerLink]="UrlBuilder.route('products')" routerLinkActive="active" class="nav-link ">Products</a>
+          <a [routerLink]="UrlBuilder.route('recipes')" routerLinkActive="active" class="nav-link ">Recipes</a>
+          <a [routerLink]="UrlBuilder.route('posts')" routerLinkActive="active" class="nav-link ">Posts</a>
         </div>
 
         <!-- Right Side -->
@@ -49,8 +49,8 @@
 <!--                </a>-->
 <!--                <button onclick="logout()" class="btn-glass px-3 py-1.5 rounded-full text-sm font-medium">Logout</button>-->
 <!--             -->
-                <a routerLink="/auth/login" class="hidden sm:inline-flex btn-glass px-4 py-1.5 rounded-full text-sm font-medium">Login</a>
-                <a routerLink="/auth/signup" class="hidden sm:inline-flex btn-primary px-4 py-1.5 rounded-full text-sm">Sign Up</a>
+                <a [routerLink]="UrlBuilder.route('auth','login')" class="hidden sm:inline-flex btn-glass px-4 py-1.5 rounded-full text-sm font-medium">Login</a>
+                <a [routerLink]="UrlBuilder.route('auth','signup')" class="hidden sm:inline-flex btn-primary px-4 py-1.5 rounded-full text-sm">Sign Up</a>
 
 
           <!-- Mobile Menu Button -->
@@ -67,10 +67,10 @@
     <button onclick="toggleMobileMenu()" class="absolute top-5 right-5 btn-glass p-2 rounded-full">
       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
-    <a href="index.html" class="${active === 'home' ? 'active' : ''}">Home</a>
-    <a href="products.html" class="${active === 'products' ? 'active' : ''}">Products</a>
-    <a href="recipes.html" class="${active === 'recipes' ? 'active' : ''}">Recipes</a>
-    <a href="posts.html" class="${active === 'posts' ? 'active' : ''}">Posts</a>
+    <a routerLink="/"  routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link ">Home</a>
+    <a [routerLink]="UrlBuilder.route('products')" routerLinkActive="active" class="nav-link ">Products</a>
+    <a [routerLink]="UrlBuilder.route('recipes')" routerLinkActive="active" class="nav-link ">Recipes</a>
+    <a [routerLink]="UrlBuilder.route('posts')" routerLinkActive="active" class="nav-link ">Posts</a>
 <!--    $!loggedIn ? `-->
 <!--          <div class="flex gap-3 mt-6">-->
 <!--            <a href="login.html" class="btn-glass flex-1 text-center py-3 rounded-xl">Login</a>-->

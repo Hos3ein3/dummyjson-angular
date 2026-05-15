@@ -1,0 +1,38 @@
+<div class="glass-card rounded-2xl p-6 md:p-8 fade-in">
+  <!-- product-info.html -->
+  <div class="flex items-center gap-2 mb-3">
+    <span class="badge">{{ product.category }}</span>
+    <span class="badge">{{ product.brand || 'Generic' }}</span>
+    @if (hasDiscount()) {
+      <span class="badge badge-discount">{{ discountLabel() }}</span>
+    }
+  </div>
+
+  <h1 class="text-2xl md:text-3xl font-bold mb-3"
+      style="font-family:'Outfit',sans-serif; color: var(--color-text);">
+    {{ product.title }}
+  </h1>
+
+  <div class="flex items-center gap-3 mb-4">
+    <app-star-rating [rating]="product.rating" />
+    <span class="text-sm" style="color: var(--color-text-muted);">
+    {{ product.rating.toFixed(1) }} / 5
+  </span>
+  </div>
+
+  <p class="text-sm leading-relaxed mb-6" style="color: var(--color-text-secondary);">
+    {{ product.description }}
+  </p>
+
+  <!-- Price -->
+  <app-price [product]="product" />
+
+  <!-- Meta Info -->
+  <app-meta-info [product]="product" />
+
+  <!-- Tags -->
+  <app-tags [product]="product" />
+
+  <!-- Actions -->
+  <app-actions [product]="product" />
+</div>

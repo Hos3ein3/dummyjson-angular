@@ -1,0 +1,24 @@
+
+<section class="pt-6 pb-2">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-2 text-sm" style="color: var(--color-text-muted);">
+      <a [routerLink]="UrlBuilder.route('/')" class="hover:underline">Home</a>
+      <span>/</span>
+      @for (item of items(); track $index) {
+        @if (item.link) {
+          <a [routerLink]="item.link" class="hover:underline">
+            {{ item.label }}
+          </a>
+        } @else {
+          <span style="color: var(--color-text);">
+            {{ item.label }}
+          </span>
+        }
+
+        @if ($index < items().length - 1) {
+          <span>/</span>
+        }
+      }
+    </div>
+  </div>
+</section>

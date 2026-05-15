@@ -1,1 +1,9 @@
-<p>product-detail works!</p>
+
+
+@if(product()!==undefined)
+{
+  <app-breadcrumb [items]="breadcrumbItems()"  />
+  <app-product-content [product]="product()!" ] />
+
+  <app-reviews [product]="product()!" />
+}

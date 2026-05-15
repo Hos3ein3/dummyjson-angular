@@ -6,5 +6,5 @@ export const environment = {
   PostUrl: '/posts',
   RecipeUrl: '/recipes',
   QuoteUrl: '/quotes',
-  loaderDelayMs: 5000,
+  loaderDelayMs: 2500,
 };

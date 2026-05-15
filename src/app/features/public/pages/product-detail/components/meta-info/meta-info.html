@@ -1,0 +1,31 @@
+<!-- meta-info.html -->
+<div class="grid grid-cols-2 gap-3 mb-6">
+  <div class="glass rounded-xl p-3 text-center">
+    <div class="text-xs mb-1" style="color: var(--color-text-muted)">Stock</div>
+    <div class="font-semibold text-sm"
+         [style.color]="product.stock > 10 ? 'var(--success)' : 'var(--error)'">
+      {{ product.stock }} units
+    </div>
+  </div>
+
+  <div class="glass rounded-xl p-3 text-center">
+    <div class="text-xs mb-1" style="color: var(--color-text-muted)">Status</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text)">
+      {{ product.availabilityStatus || 'Available' }}
+    </div>
+  </div>
+
+  <div class="glass rounded-xl p-3 text-center">
+    <div class="text-xs mb-1" style="color: var(--color-text-muted)">Warranty</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text)">
+      {{ product.warrantyInformation || 'N/A' }}
+    </div>
+  </div>
+
+  <div class="glass rounded-xl p-3 text-center">
+    <div class="text-xs mb-1" style="color: var(--color-text-muted)">Shipping</div>
+    <div class="font-semibold text-sm" style="color: var(--color-text)">
+      {{ product.shippingInformation || 'Standard' }}
+    </div>
+  </div>
+</div>

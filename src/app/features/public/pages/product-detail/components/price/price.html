@@ -1,0 +1,12 @@
+<!-- price.html -->
+<div class="flex items-end gap-3 mb-6">
+  <span class="text-3xl font-extrabold" style="color: var(--color-text); font-family:'Outfit',sans-serif;">
+    {{ product.price | currency }}
+  </span>
+
+  @if (hasDiscount()) {
+    <span class="text-lg line-through" style="color: var(--color-text-muted);">
+      {{ originalPrice() | currency }}
+    </span>
+  }
+</div>

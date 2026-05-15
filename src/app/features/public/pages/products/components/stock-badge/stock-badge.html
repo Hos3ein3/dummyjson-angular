@@ -1,0 +1,9 @@
+<span
+  class="text-xs px-2 py-0.5 rounded-md"
+  [ngStyle]="{
+    background: item.stock > 10 ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
+    color: item.stock > 10 ? 'var(--success)' : 'var(--error)'
+  }"
+>
+  {{ item.stock > 10 ? 'In Stock' : item.stock > 0 ? 'Only ' + item.stock + ' left' : 'Out of Stock' }}
+</span>

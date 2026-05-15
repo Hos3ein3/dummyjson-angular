@@ -1,0 +1,23 @@
+<a [routerLink]="UrlBuilder.route('products',item.id)" animate.enter="card-enter" class="glass-card rounded-2xl overflow-hidden group">
+  <div class="product-img-wrap h-52 p-4">
+    <img [src]="item.thumbnail" [alt]="item.title" class="w-full h-full object-contain" loading="lazy">
+  </div>
+  <div class="p-4">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="badge text-xs">{{item.category}}</span>
+      <app-discount-badge [item]="item"/>
+    </div>
+    <h3 class="font-semibold text-sm mb-1 line-clamp-2" style="color: var(--color-text); font-family:'Outfit',sans-serif;">{{item.title}}</h3>
+    <p class="text-xs line-clamp-2 mb-3" style="color: var(--color-text-muted);">{{item.description}}</p>
+    <div class="flex items-center justify-between">
+      <div>
+        <span class="font-bold text-lg" style="color: var(--color-text);">{{item.price | currency}}</span>
+      </div>
+      <app-star-rating  [rating]="item.rating"/>
+    </div>
+    <div class="flex items-center gap-2 mt-3">
+       <app-stock-badge [item]="item" />
+      <span class="text-xs" style="color:var(--color-text-muted)">{{item.brand}}</span>
+    </div>
+  </div>
+</a>
