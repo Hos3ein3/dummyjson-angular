@@ -1,7 +1,8 @@
-<select id="sort-select" class="glass-input w-full md:w-48" onchange="handleSort()">
+<select id="sort-select" class="glass-input w-full md:w-48" (change)="onSortChange($any($event.target).value)">
   <option value="">Sort by</option>
-  <option value="price-asc">Price: Low → High</option>
-  <option value="price-desc">Price: High → Low</option>
-  <option value="rating-desc">Top Rated</option>
-  <option value="title-asc">Name: A → Z</option>
+  <option value="title-asc">Title: A to Z</option>
+  <option value="title-desc">Title: Z to A</option>
+  <option value="price-asc">Price: Low to High</option>
+  <option value="price-desc">Price: High to Low</option>
+  <option value="rating-desc">Rating</option>
 </select>

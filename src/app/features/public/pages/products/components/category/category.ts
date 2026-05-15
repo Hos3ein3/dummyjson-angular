@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+import { ProductCategoryModel } from '@core/models/product-caterogy.model';
 
 @Component({
   selector: 'app-category',
@@ -6,4 +7,17 @@ import { Component } from '@angular/core';
   templateUrl: './category.html',
   styleUrl: './category.css',
 })
-export class Category {}
+export class Category {
+
+  categories = input<ProductCategoryModel[] | undefined>(undefined);
+  selectedCategory = input<string | undefined>(undefined);
+
+  categoryChanged = output<string | undefined>();
+
+  onCategoryClick(category?: string): void {
+
+    this.categoryChanged.emit(category);
+  }
+
+  skeletonItems = Array.from({ length: 25 });
+}

@@ -24,6 +24,7 @@ export abstract class BaseApiService<T, TCreate = Partial<T>, TUpdate = Partial<
   getAll(query: QueryParams): Observable<PagedResult<T>> {
     const params = this.buildParams(query);
 
+
     return this.http.get<ApiPagedResponse<T, typeof this.itemsKey>>(this.baseUrl, { params }).pipe(
       map((response) => ({
         items: response[this.itemsKey] ?? [],
@@ -32,6 +33,10 @@ export abstract class BaseApiService<T, TCreate = Partial<T>, TUpdate = Partial<
         limit: response.limit,
       })),
     );
+  }
+  getAllList(query: QueryParams): Observable<T[]> {
+    const params = this.buildParams(query);
+    return this.http.get<T[]>(this.baseUrl, { params });
   }
 
   // getAll(query?: QueryParams): Observable<PagedResult<T>> {
@@ -65,7 +70,7 @@ export abstract class BaseApiService<T, TCreate = Partial<T>, TUpdate = Partial<
   }
 
   // ── Helper ───────────────────────────────────────────
-  private buildParams(query?: QueryParams): HttpParams {
+  protected buildParams(query?: QueryParams): HttpParams {
     let params = new HttpParams();
     if (!query) return params;
     Object.entries(query).forEach(([key, value]) => {

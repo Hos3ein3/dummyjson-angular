@@ -1,0 +1,12 @@
+.skeleton-chip {
+  min-width: 3.5rem;
+  min-height: 2.5rem;
+  color: transparent;
+  user-select: none;
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border: 1px solid var(--glass-border);
+  padding: 0.35rem 0.85rem;
+  backdrop-filter: blur(8px);
+  border-radius: 9999px;
+}

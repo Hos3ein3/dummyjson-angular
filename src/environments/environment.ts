@@ -3,8 +3,9 @@ export const environment = {
   env: 'production',
   BaseUrl: 'https://dummyjson.com/',
   ProductUrl: '/products',
+  ProductCategoryUrl: '/products/categories',
   PostUrl: '/posts',
   RecipeUrl: '/recipes',
   QuoteUrl: '/quotes',
-  loaderDelayMs:0,
+  loaderDelayMs: 0,
 };

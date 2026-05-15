@@ -1,3 +1,25 @@
 <div class="flex flex-wrap gap-2 mt-4" id="category-chips">
-  <span class="chip active" onclick="filterByCategory('')">All</span>
+  @if (categories() === undefined) {
+    @for (item of skeletonItems; track $index) {
+      <span class=" skeleton skeleton-chip"></span>
+    }
+  } @else {
+    <span
+      class="chip cursor-pointer"
+      [class.active]="selectedCategory() === undefined"
+      (click)="onCategoryClick(undefined)"
+    >
+      All
+    </span>
+
+    @for (category of categories() ?? []; track category.slug) {
+      <span
+        class="chip cursor-pointer"
+        [class.active]="selectedCategory() === category.slug"
+        (click)="onCategoryClick(category.slug)"
+      >
+        {{ category.name }}
+      </span>
+    }
+  }
 </div>

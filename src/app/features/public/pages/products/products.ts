@@ -11,18 +11,14 @@ import {
 import { ProductService } from '@shared/services/product.service';
 import { PagedResult } from '@shared/models/base.model';
 import { ProductModel } from '@core/models/product.model';
-import { SearchIcon } from '@shared/components/icons';
 import { Filtering } from './components/filtering/filtering';
-import { RouterLink } from '@angular/router';
-import { StarRating } from '@shared/components/star-rating/star-rating';
 import { ProductItem } from './components/product-item/product-item';
 import { environment } from '../../../../../environments/environment';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { DiscountBadge } from './components/discount-badge/discount-badge';
-import { StockBadge } from './components/stock-badge/stock-badge';
-import { TotalItem } from './components/total-item/total-item';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductGlassLoader } from '../../components/product-glass-loader/product-glass-loader';
+import { ProductCategoryService } from '@shared/services/product-category.service';
+import { ProductCategoryModel } from '@core/models/product-caterogy.model';
 
 @Component({
   selector: 'app-products',
@@ -32,17 +28,32 @@ import { ProductGlassLoader } from '../../components/product-glass-loader/produc
 })
 export class Products implements OnInit, AfterViewInit {
   products = signal<PagedResult<ProductModel> | undefined>(undefined);
+  productCategories = signal<ProductCategoryModel[] | undefined>(undefined);
   private productService = inject(ProductService);
+  private productCategoryService = inject(ProductCategoryService);
   private onDestroyRef = inject(DestroyRef);
   protected skip: number = 0;
   protected limit: number = 16;
   hasMore = signal(true);
   isFetching = signal(false);
+  searchTerm = signal('');
+  sortBy = signal<string | null>(null);
+  sortOrder = signal<'asc' | 'desc' | null>(null);
+  selectedCategory = signal<string | undefined>(undefined);
 
   private observer?: IntersectionObserver;
   sentinel = viewChild<ElementRef>('sentinel');
 
   ngOnInit() {
+    const subProductCategory = this.productCategoryService.getAllList({}).subscribe({
+      next: (result) => {
+        setTimeout(() => {
+          this.productCategories.set(result);
+        }, environment.loaderDelayMs);
+      },
+    });
+    this.onDestroyRef.onDestroy(() => subProductCategory.unsubscribe());
+
     this.loadProducts();
   }
   ngAfterViewInit() {
@@ -70,28 +81,64 @@ export class Products implements OnInit, AfterViewInit {
     });
   }
 
+  onCategoryChanged(category?: string): void {
+    if (this.selectedCategory() === category) return;
+    this.limit=0;
+    this.selectedCategory.set(category);
+    this.resetAndReload();
+  }
+
+  onSearchChanged(value: string): void {
+    this.searchTerm.set(value);
+    this.limit =16;
+    this.resetAndReload();
+  }
+
+  onSortChanged(sort: { sortBy: string | null; order: 'asc' | 'desc' | null }): void {
+    this.sortBy.set(sort.sortBy);
+    this.sortOrder.set(sort.order);
+    this.limit = 16;
+    this.resetAndReload();
+  }
+
+  private resetAndReload(): void {
+    this.products.set(undefined);
+    this.skip = 0;
+    this.limit = 16;
+    this.hasMore.set(true);
+    this.loadProducts(true);
+  }
   protected readonly Math = Math;
 
-  private loadProducts() {
-    console.log('skip:' + this.skip);
-    console.log('limit:' + this.limit);
-    if (this.isFetching() || !this.hasMore()) return;
+  private loadProducts(reset = false): void {
+    if (this.isFetching()) return;
+    if (!reset && !this.hasMore()) return;
+
     this.isFetching.set(true);
 
-    const subscription = this.productService
-      .getAll({ skip: this.skip, limit: this.limit })
+    const currentSkip = reset ? 0 : this.skip;
+console.log('limit in load:' + this.limit);
+    this.productService
+      .getAll({
+        skip: currentSkip,
+        limit: this.limit,
+        sortBy: this.sortBy() ?? undefined,
+        order: this.sortOrder() ?? undefined,
+        q: this.searchTerm() || undefined,
+        category: this.selectedCategory() ?? undefined,
+      })
       .pipe(takeUntilDestroyed(this.onDestroyRef))
       .subscribe({
         next: (result) => {
           setTimeout(() => {
             this.products.update((current) => ({
-              items: [...(current?.items ?? []), ...result.items],
+              items: reset ? result.items : [...(current?.items ?? []), ...result.items],
               total: result.total,
               skip: result.skip,
               limit: result.limit,
             }));
 
-            this.skip += this.limit;
+            this.skip = currentSkip + result.items.length;
             this.hasMore.set((this.products()?.items.length ?? 0) < result.total);
             this.isFetching.set(false);
           }, environment.loaderDelayMs);
@@ -100,6 +147,6 @@ export class Products implements OnInit, AfterViewInit {
           this.isFetching.set(false);
         },
       });
-    this.onDestroyRef.onDestroy(() => subscription.unsubscribe());
   }
+
 }

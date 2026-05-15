@@ -16,7 +16,13 @@
   </div>
 </section>
 
-<app-filtering />
+<app-filtering
+  [categories]="productCategories()"
+  (searchChanged)="onSearchChanged($event)"
+  (sortChanged)="onSortChanged($event)"
+  (categoryChanged)="onCategoryChanged($event)"
+  [selectedCategory]="selectedCategory()"
+/>
 
 <section class="py-6">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
