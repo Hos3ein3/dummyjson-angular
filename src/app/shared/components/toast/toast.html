@@ -14,7 +14,8 @@
         aria-label="Close notification"
         (click)="toastService.remove(toast.id)"
       >
-        ×
+<!--        ×-->
+        <app-close-icon/>
       </button>
 
       <span class="toast-message">{{ toast.message }}</span>
