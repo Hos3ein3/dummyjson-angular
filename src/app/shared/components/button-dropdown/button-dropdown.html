@@ -1,0 +1,41 @@
+<div class="btn-dropdown" [class.open]="isOpen()" [class]="options.cssClass ?? ''">
+  <ng-container *ngIf="options.splitButton; else singleButton">
+    <div class="btn-group">
+      <app-button
+        [options]="primaryButtonOptions"
+        (buttonClick)="onPrimaryClick($event)">
+      </app-button>
+
+      <app-button
+        [options]="toggleButtonOptions"
+        (buttonClick)="toggleDropdown()">
+        ▾
+      </app-button>
+    </div>
+  </ng-container>
+
+  <ng-template #singleButton>
+    <app-button
+      [options]="singleButtonOptions"
+      (buttonClick)="toggleDropdown()">
+      <ng-container>{{ options.triggerButton.label }} ▾</ng-container>
+    </app-button>
+  </ng-template>
+
+  <div class="btn-dropdown-menu" *ngIf="isOpen()">
+    <ng-container *ngFor="let item of options.menuItems">
+      <div *ngIf="item.dividerBefore" class="btn-dropdown-divider"></div>
+
+      <div
+        class="btn-dropdown-item"
+        [class]="item.cssClass ?? ''"
+        [style.color]="item.danger ? 'var(--error)' : null"
+        [class.opacity-50]="item.disabled"
+        (click)="onItemClick(item)"
+      >
+        <span *ngIf="item.icon">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </div>
+    </ng-container>
+  </div>
+</div>

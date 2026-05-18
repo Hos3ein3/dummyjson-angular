@@ -1,0 +1,50 @@
+<ng-container *ngIf="modal() as active">
+  <div
+    class="modal-overlay"
+    [class.open]="!!active"
+    (click)="onBackdropClick($event)"
+  >
+    <div
+      class="modal-box"
+      [ngClass]="sizeClass(active.options.size)"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="active.options.title || 'Modal dialog'"
+    >
+      <div class="modal-header" *ngIf="active.options.showHeader">
+        <h3 class="modal-title">{{ active.options.title }}</h3>
+
+        <app-button
+          *ngIf="active.options.showCloseButton"
+          [options]="closeButtonOptions"
+          (buttonClick)="close()"
+          [hasProjectedContent]="true"
+        >
+          <app-close-icon />
+        </app-button>
+      </div>
+
+      <div class="modal-body">
+        <p *ngIf="active.options.message" class="modal-message">
+          {{ active.options.message }}
+        </p>
+
+        <ng-container
+          *ngIf="active.options.contentTemplate"
+          [ngTemplateOutlet]="active.options.contentTemplate"
+          [ngTemplateOutletContext]="{ $implicit: active.options.data, data: active.options.data }">
+        </ng-container>
+      </div>
+
+      <div class="modal-footer" *ngIf="active.options.showFooter">
+
+        <app-button
+          *ngFor="let action of active.options.actions"
+          [options]="buildActionButtonOptions(action)"
+          (buttonClick)="runAction(action)">
+        </app-button>
+      </div>
+    </div>
+  </div>
+</ng-container>

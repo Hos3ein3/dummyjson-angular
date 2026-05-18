@@ -9,10 +9,12 @@ import {
 } from '@angular/router';
 import { FullpageLoader } from '@shared/components/fullpage-loader/fullpage-loader';
 import { Toast } from '@shared/components/toast/toast';
+import { Modal } from '@shared/components/modal/modal';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FullpageLoader, Toast],
+  imports: [RouterOutlet, FullpageLoader, Toast,Modal],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

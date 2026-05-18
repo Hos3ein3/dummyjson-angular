@@ -14,3 +14,4 @@ export * from './clock-icon/clock-icon';
 export * from './chef-icon/chef-icon';
 export * from './gear-icon/gear-icon';
 export * from './lock-icon/lock-icon';
+export * from './dashboard-icon/dashboard-icon';

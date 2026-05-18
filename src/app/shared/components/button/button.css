@@ -1,0 +1,48 @@
+
+/* Button Variants */
+.btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: var(--btn-bg); color: var(--btn-text); font-weight: 600; font-size: 0.85rem; border: none; border-radius: 0.625rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(86,182,198,0.25); position: relative; overflow: hidden; }
+.btn-primary:hover { box-shadow: 0 6px 16px rgba(86,182,198,0.4); transform: translateY(-1px); }
+.btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 0.625rem; color: var(--color-text); font-weight: 500; font-size: 0.85rem; transition: all 0.3s; cursor: pointer; }
+.btn-secondary:hover { background: var(--glass-bg-hover); }
+.btn-danger { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); border-radius: 0.625rem; color: var(--error); font-weight: 500; font-size: 0.85rem; transition: all 0.3s; cursor: pointer; }
+.btn-danger:hover { background: rgba(239,68,68,0.2); }
+.btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: transparent; border: none; border-radius: 0.625rem; color: var(--color-text-secondary); font-weight: 500; font-size: 0.85rem; transition: all 0.3s; cursor: pointer; }
+.btn-ghost:hover { background: var(--glass-bg); color: var(--color-text); }
+.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.75rem; }
+.btn-lg { padding: 0.8rem 1.75rem; font-size: 1rem; }
+.btn-icon { padding: 0.5rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
+.btn-icon svg { width: 18px; height: 18px; }
+
+/* Glassy Buttons */
+.btn-glass { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 0.75rem; color: var(--color-text); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.btn-glass:hover { background: var(--glass-bg-hover); box-shadow: 0 8px 32px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.btn-glass-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(86,182,198,0.15); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(86,182,198,0.3); border-radius: 0.75rem; color: #56B6C6; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.btn-glass-primary:hover { background: rgba(86,182,198,0.25); box-shadow: 0 8px 32px rgba(86,182,198,0.2); transform: translateY(-1px); }
+.btn-glass-success { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(16,185,129,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(16,185,129,0.3); border-radius: 0.75rem; color: #10B981; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.btn-glass-success:hover { background: rgba(16,185,129,0.22); box-shadow: 0 8px 32px rgba(16,185,129,0.2); transform: translateY(-1px); }
+.btn-glass-danger { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(239,68,68,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(239,68,68,0.3); border-radius: 0.75rem; color: #EF4444; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.btn-glass-danger:hover { background: rgba(239,68,68,0.22); box-shadow: 0 8px 32px rgba(239,68,68,0.2); transform: translateY(-1px); }
+.btn-glass-warning { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(245,158,11,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(245,158,11,0.3); border-radius: 0.75rem; color: #F59E0B; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.btn-glass-warning:hover { background: rgba(245,158,11,0.22); box-shadow: 0 8px 32px rgba(245,158,11,0.2); transform: translateY(-1px); }
+.btn-glass-info { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(59,130,246,0.12); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(59,130,246,0.3); border-radius: 0.75rem; color: #3B82F6; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.btn-glass-info:hover { background: rgba(59,130,246,0.22); box-shadow: 0 8px 32px rgba(59,130,246,0.2); transform: translateY(-1px); }
+.btn-outline-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: transparent; border: 2px solid var(--btn-bg); border-radius: 0.625rem; color: var(--btn-bg); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
+.btn-outline-primary:hover { background: var(--btn-bg); color: var(--btn-text); }
+/* Loading State for Buttons */
+.btn-loading { pointer-events: none; opacity: 0.8; color: transparent !important; }
+.btn-loading::after { content: ''; position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin-left: -9px; margin-top: -9px; border: 2px solid rgba(255,255,255,0.3); border-top-color: currentColor; border-radius: 50%; animation: spin 0.6s linear infinite; }
+.btn-secondary.btn-loading::after { border-color: rgba(0,0,0,0.1); border-top-color: var(--color-text); }
+html.dark .btn-secondary.btn-loading::after { border-color: rgba(255,255,255,0.1); border-top-color: var(--color-text); }
+
+/* Button Group / Dropdown */
+.btn-group { display: inline-flex; border-radius: 0.625rem; overflow: hidden; }
+.btn-group > * { border-radius: 0; }
+.btn-group > *:first-child { border-radius: 0.625rem 0 0 0.625rem; }
+.btn-group > *:last-child { border-radius: 0 0.625rem 0.625rem 0; }
+.btn-dropdown { position: relative; display: inline-flex; }
+.btn-dropdown-menu { position: absolute; top: calc(100% + 4px); right: 0; min-width: 180px; background: var(--color-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: 0.75rem; box-shadow: var(--glass-shadow-hover); z-index: 1000; display: none; overflow: hidden; }
+html.dark .btn-dropdown-menu { background: var(--color-bg-alt); }
+.btn-dropdown.open .btn-dropdown-menu { display: block; }
+.btn-dropdown-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; font-size: 0.85rem; color: var(--color-text-secondary); cursor: pointer; transition: background 0.2s; }
+.btn-dropdown-item:hover { background: var(--glass-bg-hover); color: var(--color-text); }
+.btn-dropdown-divider { height: 1px; background: var(--glass-border); margin: 0.25rem 0; }

@@ -1,0 +1,22 @@
+<button
+  [type]="options.type"
+  [disabled]="options.disabled || options.loading"
+  [attr.aria-label]="options.ariaLabel || null"
+  [attr.title]="options.title || null"
+  [ngClass]="buttonClasses"
+  (click)="handleClick($event)"
+>
+      <span class="btn-content" [class.btn-content-hidden]="options.loading">
+        <ng-content select="[btn-icon]"></ng-content>
+
+@if(!hasProjectedContent)
+{
+  <ng-container >
+          {{ options.label }}
+        </ng-container>
+}
+
+
+        <ng-content></ng-content>
+      </span>
+</button>
