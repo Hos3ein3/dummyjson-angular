@@ -1,1 +1,168 @@
+@if(options.withInputGroup)
+{
+  <div
+    class="input-group"
+    [ngClass]="wrapperClasses"
+  >
+    @if (options.label) {
+      <app-label [options]="$any(options.label)" />
+    }
+    <div *ngIf="options.prefix; else normalInput" class="input-prefix">
+      <span class="prefix">{{ options.prefix }}</span>
+      <input
+        [id]="options.id || null"
+        [name]="options.name || null"
+        [type]="options.type"
+        [placeholder]="options.placeholder"
+        [attr.autocomplete]="options.autocomplete || null"
+        [readonly]="options.readonly"
+        [required]="options.required"
+        [disabled]="isDisabled"
+        [value]="value"
+        [class]="options.inputClass"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+      />
+    </div>
+
+    <ng-template #normalInput>
+      <div *ngIf="options.suffix; else plainInput" class="input-suffix">
+        <input
+          [id]="options.id || null"
+          [name]="options.name || null"
+          [type]="options.type"
+          [placeholder]="options.placeholder"
+          [attr.autocomplete]="options.autocomplete || null"
+          [readonly]="options.readonly"
+          [required]="options.required"
+          [disabled]="isDisabled"
+          [value]="value"
+          [class]="options.inputClass"
+          (input)="onInput($event)"
+          (blur)="onBlur()"
+        />
+        <span class="suffix">{{ options.suffix }}</span>
+      </div>
+    </ng-template>
+
+    <ng-template #plainInput>
+      <input
+        [id]="options.id || null"
+        [name]="options.name || null"
+        [type]="options.type"
+        [placeholder]="options.placeholder"
+        [attr.autocomplete]="options.autocomplete || null"
+        [readonly]="options.readonly"
+        [required]="options.required"
+        [disabled]="isDisabled"
+        [value]="value"
+        [class]="options.inputClass"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+      />
+    </ng-template>
+
+    @if(showError)
+    {
+      <div  class="input-error-msg">
+        {{ errorMessage }}
+      </div>
+    }
+    @if(showWarning){
+      <div  class="input-warning-msg">
+        {{ options.warningText }}
+      </div>
+    }
+    @if(showHelperText)
+    {
+      <div  class="input-helper">
+        {{ options.helperText }}
+      </div>
+    }
+
+
+<ng-content />
+  </div>
+
+} @else {
+  @if (options.label) {
+    <app-label [options]="$any(options.label)" />
+  }
+  <div *ngIf="options.prefix; else normalInput" class="input-prefix">
+    <span class="prefix">{{ options.prefix }}</span>
+    <input
+      [id]="options.id || null"
+      [name]="options.name || null"
+      [type]="options.type"
+      [placeholder]="options.placeholder"
+      [attr.autocomplete]="options.autocomplete || null"
+      [readonly]="options.readonly"
+      [required]="options.required"
+      [disabled]="isDisabled"
+      [value]="value"
+      [class]="options.inputClass"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </div>
+
+  <ng-template #normalInput>
+    <div *ngIf="options.suffix; else plainInput" class="input-suffix">
+      <input
+        [id]="options.id || null"
+        [name]="options.name || null"
+        [type]="options.type"
+        [placeholder]="options.placeholder"
+        [attr.autocomplete]="options.autocomplete || null"
+        [readonly]="options.readonly"
+        [required]="options.required"
+        [disabled]="isDisabled"
+        [value]="value"
+        [class]="options.inputClass"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+      />
+      <span class="suffix">{{ options.suffix }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template #plainInput>
+    <input
+      [id]="options.id || null"
+      [name]="options.name || null"
+      [type]="options.type"
+      [placeholder]="options.placeholder"
+      [attr.autocomplete]="options.autocomplete || null"
+      [readonly]="options.readonly"
+      [required]="options.required"
+      [disabled]="isDisabled"
+      [value]="value"
+      [class]="options.inputClass"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+    />
+  </ng-template>
+
+  @if(showError)
+  {
+    <div  class="input-error-msg">
+      {{ errorMessage }}
+    </div>
+  }
+  @if(showWarning){
+    <div  class="input-warning-msg">
+      {{ options.warningText }}
+    </div>
+  }
+  @if(showHelperText)
+  {
+    <div  class="input-helper">
+      {{ options.helperText }}
+    </div>
+  }
+
+
+  <ng-content />
+}
+
 

@@ -15,3 +15,5 @@ export * from './chef-icon/chef-icon';
 export * from './gear-icon/gear-icon';
 export * from './lock-icon/lock-icon';
 export * from './dashboard-icon/dashboard-icon';
+export * from './home-icon/home-icon';
+export * from './eye-off-icon/eye-off-icon';

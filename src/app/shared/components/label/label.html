@@ -1,0 +1,18 @@
+
+@if(!options.hide)
+{
+  <label class="input-label"
+         [class]="options.cssClass ?? '' "
+         [attr.for]="options.forId || null">
+    {{options.text}}
+    @if(options.required)
+    {
+      <span class="required">*</span>
+    }
+    @if(options.infoBadge)
+    {
+    <app-info-badge [infoBadgeOptions]="options.infoBadge" />
+
+    }
+  </label>
+}

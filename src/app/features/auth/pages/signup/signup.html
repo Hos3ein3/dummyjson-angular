@@ -1,1 +1,91 @@
-<p>signup works!</p>
+<!-- Signup Section -->
+<section class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4">
+  <div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8 fade-in">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style="background: var(--btn-bg);">
+        <span style="color: var(--btn-text); font-weight:800; font-size:1.5rem; font-family:'Outfit',sans-serif;">D</span>
+      </div>
+      <h1 class="text-3xl font-bold" style="font-family:'Outfit',sans-serif; color: var(--color-text);">Create Account</h1>
+      <p class="mt-2 text-sm" style="color: var(--color-text-muted);">Join DummyStore today</p>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="glass-card rounded-2xl p-6 md:p-8 fade-in">
+      <form [formGroup]="form"  (ngSubmit)="onSubmit()"
+            [class.shake-error]="isShakeError">
+        <!-- Name Row -->
+        <div class="grid grid-cols-2 gap-4 mb-5">
+          <div>
+            <app-textbox [options]="firstNameOptions" formControlName="firstname" />
+          </div>
+          <div>
+            <app-textbox [options]="lastNameOptions" formControlName="lastname" />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-5">
+          <app-textbox [options]="emailOptions" formControlName="email" />
+        </div>
+
+        <!-- Username -->
+        <div class="mb-5">
+          <app-textbox [options]="usernameOptions" formControlName="username"/>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-5">
+<!--          <label class="block text-sm font-medium mb-2" style="color: var(&#45;&#45;color-text);">Password</label>-->
+<!--          <div class="relative">-->
+<!--            <input type="password" id="signup-password" placeholder="Min 6 characters" class="glass-input pr-12" required minlength="6">-->
+<!--            <button type="button" onclick="togglePasswordVisibility('signup-password', this)" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:var(&#45;&#45;color-text-muted)">-->
+<!--              <app-eye-icon />-->
+<!--            </button>-->
+<!--          </div>-->
+          <app-textbox [options]="passwordOptions" formControlName="password" />
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-5">
+         <app-textbox [options]="repeatPasswordOptions" formControlName="repeatPassword" />
+        </div>
+
+        <!-- Note -->
+        <div class="glass rounded-xl p-3 mb-5">
+          <p class="text-xs" style="color: var(--color-text-muted);">
+            ℹ️ This is a simulated signup using DummyJSON's API. No real account will be created.
+          </p>
+        </div>
+
+        <!-- Error -->
+        <div id="signup-error" class="hidden mb-4 p-3 rounded-xl text-sm" style="background: rgba(239,68,68,0.1); color: var(--error); border: 1px solid rgba(239,68,68,0.2);"></div>
+
+        <!-- Submit -->
+
+        <app-button [options]="submitButtonOptions" >
+          <span id="signup-btn-text">Create Account</span>
+          <span id="signup-spinner" class="hidden">
+              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+            </span>
+        </app-button>
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-4 my-6">
+        <div class="flex-1 h-px" style="background: var(--glass-border);"></div>
+        <span class="text-xs" style="color: var(--color-text-muted);">or</span>
+        <div class="flex-1 h-px" style="background: var(--glass-border);"></div>
+      </div>
+
+      <!-- Login Link -->
+      <p class="text-center text-sm" style="color: var(--color-text-muted);">
+        Already have an account?
+        <a [routerLink]="UrlBuilder.route('auth','login')" class="font-semibold underline" style="color: var(--color-text);">Login</a>
+      </p>
+    </div>
+  </div>
+</section>

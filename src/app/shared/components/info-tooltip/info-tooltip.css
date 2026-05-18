@@ -1,0 +1,6 @@
+.info-badge .info-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) scale(0.9); padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-size: 0.72rem; font-weight: 500; background: var(--btn-bg); color: var(--btn-text); opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 100; width: max-content; max-width: 250px; white-space: normal; line-height: 1.4; text-align: center; }
+.info-badge:hover .info-tooltip { opacity: 1; transform: translateX(-50%) scale(1); }
+.info-badge .info-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--btn-bg); }
+:host {
+  display: contents;
+}

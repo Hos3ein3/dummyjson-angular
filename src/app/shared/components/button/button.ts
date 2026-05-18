@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { BaseFieldOptions } from '@shared/forms/options/BaseFieldOptions';
 
 @Component({
   selector: 'app-button',
@@ -76,22 +77,23 @@ export class Button {
 }
 
 
-export class ButtonOptions {
-  label = '';
+export class ButtonOptions extends BaseFieldOptions{
+
   variant: ButtonVariant = 'primary';
   size: ButtonSize = 'md';
   type: ButtonType = 'button';
 
-  disabled = false;
+
   loading = false;
   rounded = true;
   iconOnly = false;
 
   ariaLabel?: string;
   title?: string;
-  cssClass?: string;
+
 
   constructor(init?: Partial<ButtonOptions>) {
+    super();
     Object.assign(this, init ?? {});
   }
 }
