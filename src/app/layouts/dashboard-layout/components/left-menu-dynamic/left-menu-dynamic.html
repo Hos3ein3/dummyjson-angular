@@ -1,0 +1,67 @@
+<!-- left-menu.component.html -->
+<aside class="sidebar" [class.collapsed]="collapsed">
+  <div class="sidebar-header">
+    <div
+      class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+      style="background: var(--btn-bg)"
+    >
+      <span
+        style="
+          color: var(--btn-text);
+          font-weight: 800;
+          font-family: 'Outfit', sans-serif;
+          font-size: 0.9rem;
+        "
+      >
+        D
+      </span>
+    </div>
+
+    @if (!collapsed) {
+      <span class="logo-text">Dashboard</span>
+    }
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (group of navGroups; track group.group) {
+      <div class="sidebar-group">
+        <div class="sidebar-group-title">{{ group.group }}</div>
+
+        @for (item of group.items; track item.id) {
+          <app-left-menu-dynamic-item
+            [item]="item"
+            [collapsed]="collapsed"
+            [level]="0">
+          </app-left-menu-dynamic-item>
+        }
+      </div>
+    }
+
+    <div class="sidebar-group mt-2">
+      <div class="sidebar-group-title">Other</div>
+
+      <a [routerLink]="UrlBuilder.route('')" class="sidebar-link">
+        <span class="icon">←</span>
+        @if (!collapsed) {
+          <span class="link-text">Back to Website</span>
+        }
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button
+      type="button"
+      class="sidebar-link sidebar-collapse-btn"
+      (click)="collapseSidebar()">
+
+
+      @if (!collapsed) {
+        <span class="icon">⇤</span>
+        <span class="link-text">Collapse</span>
+      } @else {
+        <span class="icon">⇥</span>
+      }
+    </button>
+  </div>
+</aside>

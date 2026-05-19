@@ -18,3 +18,6 @@ export * from './dashboard-icon/dashboard-icon';
 export * from './home-icon/home-icon';
 export * from './eye-off-icon/eye-off-icon';
 export * from './logout-icon/logout-icon';
+export * from './bell-icon/bell-icon';
+export * from './user-icon/user-icon';
+export * from './product-icon/product-icon'

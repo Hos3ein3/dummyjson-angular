@@ -1,0 +1,63 @@
+<div class="data-grid">
+  @if (loading()) {
+    <div class="partial-loader">
+      <div class="spinner"></div>
+    </div>
+  } @else if (pagedRows().length === 0) {
+    <p class="data-grid-empty">{{ options().emptyText ?? 'No data found.' }}</p>
+  } @else {
+    <div class="data-grid-table-wrap">
+      <table class="data-grid-table">
+        <thead>
+        <tr>
+          @for (col of options().columns; track col.key) {
+            <th
+              [class]="col.headerClassName ?? ''"
+              (click)="toggleSort(col)"
+              [class.is-sortable]="col.sortable !== false"
+            >
+              <span>{{ col.label }}</span>
+
+              @if (sortKey() === col.key) {
+                <span class="sort-indicator">
+                        {{ sortDirection() === 'asc' ? '↑' : '↓' }}
+                      </span>
+              }
+            </th>
+          }
+        </tr>
+        </thead>
+
+        <tbody>
+          @for (row of pagedRows(); track rowTrack($index, row); let rowIndex = $index) {
+            <tr>
+              @for (col of options().columns; track col.key) {
+                <td [class]="col.className ?? ''">
+                  @if (col.render) {
+                    <span [innerHTML]="col.render(read(row, col.key), row, rowIndex)"></span>
+                  } @else {
+                    {{ read(row, col.key) }}
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="data-grid-pagination">
+        <button type="button" (click)="prevPage()" [disabled]="page() === 1">
+          Prev
+        </button>
+
+        <span>Page {{ page() }} / {{ totalPages() }}</span>
+
+        <button type="button" (click)="nextPage()" [disabled]="page() === totalPages()">
+          Next
+        </button>
+      </div>
+    }
+  }
+</div>

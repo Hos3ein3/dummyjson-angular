@@ -1,0 +1,171 @@
+<aside class="sidebar" [class.sidebar-collapsed]="collapsed()">
+  <div class="sidebar-header">
+    <div
+      class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+      style="background: var(--btn-bg)"
+    >
+      <span
+        style="
+          color: var(--btn-text);
+          font-weight: 800;
+          font-family: 'Outfit', sans-serif;
+          font-size: 0.9rem;
+        "
+      >
+        D
+      </span>
+    </div>
+
+    @if (!collapsed()) {
+      <span class="logo-text">Dashboard</span>
+    }
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Main</div>
+
+      <a
+        routerLink="/dashboard/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="sidebar-link">
+        <app-dashboard-icon />
+        @if (!collapsed()) {
+          <span class="link-text">Home</span>
+        }
+      </a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Catalog</div>
+
+      <button
+        type="button"
+        class="sidebar-link sidebar-toggle"
+        [class.active]="productsOpen()"
+        (click)="toggleProducts()">
+<!--        <app-products-icon />-->
+        @if (!collapsed()) {
+          <span class="link-text">Products</span>
+          <span class="chevron-arrow ml-auto" [class.rotate-180]="productsOpen()">
+<!--            <app-chevron-down-icon />-->
+          </span>
+        }
+      </button>
+
+      @if (productsOpen() && !collapsed()) {
+        <div class="sidebar-submenu">
+          <a
+            routerLink="/dashboard/products"
+            routerLinkActive="active"
+            class="sidebar-link submenu-link">
+            <span class="link-text">All Products</span>
+          </a>
+
+          <a
+            routerLink="/dashboard/categories"
+            routerLinkActive="active"
+            class="sidebar-link submenu-link">
+            <span class="link-text">Categories</span>
+          </a>
+        </div>
+      }
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Content</div>
+
+      <button
+        type="button"
+        class="sidebar-link sidebar-toggle"
+        [class.active]="contentOpen()"
+        (click)="toggleContent()">
+<!--        <app-posts-icon />-->
+        @if (!collapsed()) {
+          <span class="link-text">Content</span>
+          <span class="chevron-arrow ml-auto" [class.rotate-180]="contentOpen()">
+<!--            <app-chevron-down-icon />-->
+          </span>
+        }
+      </button>
+
+      @if (contentOpen() && !collapsed()) {
+        <div class="sidebar-submenu">
+          <a
+            routerLink="/dashboard/posts"
+            routerLinkActive="active"
+            class="sidebar-link submenu-link">
+            <span class="link-text">Posts</span>
+          </a>
+
+          <a
+            routerLink="/dashboard/recipes"
+            routerLinkActive="active"
+            class="sidebar-link submenu-link">
+            <span class="link-text">Recipes</span>
+          </a>
+        </div>
+      }
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-group-title">Users</div>
+
+      <button
+        type="button"
+        class="sidebar-link sidebar-toggle"
+        [class.active]="usersOpen()"
+        (click)="toggleUsers()">
+<!--        <app-users-icon />-->
+        @if (!collapsed()) {
+          <span class="link-text">Users</span>
+          <span class="chevron-arrow ml-auto" [class.rotate-180]="usersOpen()">
+<!--            <app-chevron-down-icon />-->
+          </span>
+        }
+      </button>
+
+      @if (usersOpen() && !collapsed()) {
+        <div class="sidebar-submenu">
+          <a
+            routerLink="/dashboard/profile"
+            routerLinkActive="active"
+            class="sidebar-link submenu-link">
+            <span class="link-text">Profile</span>
+          </a>
+
+          <a
+            routerLink="/dashboard/customers"
+            routerLinkActive="active"
+            class="sidebar-link submenu-link">
+            <span class="link-text">Customers</span>
+          </a>
+        </div>
+      }
+    </div>
+
+    <div class="sidebar-group" style="margin-top: 0.5rem">
+      <div class="sidebar-group-title">Other</div>
+
+      <a routerLink="/" class="sidebar-link">
+<!--        <app-back-icon />-->
+        @if (!collapsed()) {
+          <span class="link-text">Back to Website</span>
+        }
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button
+      type="button"
+      class="sidebar-link sidebar-toggle justify-center"
+      (click)="toggleSidebar()">
+<!--      <app-collapse-icon />-->
+      @if (!collapsed()) {
+        <span class="link-text" style="font-size: 0.75rem">Collapse</span>
+      }
+    </button>
+  </div>
+</aside>

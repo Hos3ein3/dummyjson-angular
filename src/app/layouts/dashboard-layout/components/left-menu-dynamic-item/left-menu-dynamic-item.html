@@ -1,0 +1,71 @@
+@if (hasChildren) {
+  <div class="sidebar-has-children">
+    <button
+      type="button"
+      class="sidebar-link w-full"
+      [class.active]="hasActiveChild(item)"
+      [style.padding-left]="getPadding()"
+      (click)="toggle()">
+
+      @if (item.icon) {
+        @if (isIconComponent(item.icon)) {
+          <ng-container *ngComponentOutlet="$any(item.icon)"></ng-container>
+        } @else {
+          <span class="icon">{{ item.icon }}</span>
+        }
+      } @else {
+        <span style="width: 18px"></span>
+      }
+
+      @if (!collapsed) {
+        <span class="link-text">{{ item.label }}</span>
+        <span
+          class="chevron-arrow ml-auto transition-transform"
+          [class.rotate-180]="expanded()"
+          style="width: 14px; display: inline-flex; align-items: center">
+          ⌄
+        </span>
+      }
+    </button>
+
+    @if (expanded() && !collapsed) {
+      <div
+        class="sidebar-submenu"
+        style="
+          border-left: 1px solid var(--glass-border);
+          margin-left: 1rem;
+          padding-left: 0.25rem;
+          margin-top: 0.25rem;
+        ">
+        @for (child of item.children!; track child.id) {
+          <app-left-menu-dynamic-item
+            [item]="child"
+            [level]="level + 1"
+            [collapsed]="collapsed">
+          </app-left-menu-dynamic-item>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <a
+    [routerLink]="item.href || '/'"
+    routerLinkActive="active"
+    class="sidebar-link"
+    [style.padding-left]="getPadding()">
+
+    @if (item.icon) {
+      @if (isIconComponent(item.icon)) {
+        <ng-container *ngComponentOutlet="$any(item.icon)"></ng-container>
+      } @else {
+        <span class="icon">{{ item.icon }}</span>
+      }
+    } @else {
+      <span style="width: 18px"></span>
+    }
+
+    @if (!collapsed) {
+      <span class="link-text">{{ item.label }}</span>
+    }
+  </a>
+}

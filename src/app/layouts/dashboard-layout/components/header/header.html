@@ -1,0 +1,195 @@
+<div class="flex items-center gap-3">
+  <button
+    type="button"
+    (click)="toggleMobileMenu()"
+    class="btn-ghost p-1.5 rounded-lg md:hidden"
+    style="width: 36px; height: 36px"
+  >
+    ☰
+  </button>
+
+ <app-breadcrumb [items]="breadcrumbService.items()" />
+</div>
+
+<div class="flex items-center gap-1">
+  <div class="relative hidden sm:block">
+    <span
+      class="absolute left-2.5 top-1/2 -translate-y-1/2 opacity-40"
+      style="width: 16px; height: 16px"
+    >
+      <app-search-icon />
+    </span>
+    <input
+      [(ngModel)]="search"
+      type="text"
+      placeholder="Search..."
+      class="glass-input pl-9 py-1.5 text-sm"
+      style="width: 180px; border-radius: 9999px"
+    />
+  </div>
+
+  <div class="relative hidden md:block">
+    <button
+      type="button"
+      class="btn-ghost p-2 rounded-lg text-xs font-semibold"
+      (click)="toggleMegaMenu($event)"
+      style="font-size: 0.8rem"
+    >
+      Apps ⌄
+    </button>
+
+    @if (megaMenuOpen()) {
+      <div class="mega-menu-dropdown" (click)="$event.stopPropagation()">
+        <div class="grid grid-cols-3 gap-1 p-3" style="min-width: 280px">
+          <a routerLink="/dashboard/calendar" class="mega-item">📅 <span>Calendar</span></a>
+          <a routerLink="/dashboard/helpdesk" class="mega-item">💬 <span>Helpdesk</span></a>
+          <a routerLink="/dashboard/files" class="mega-item">📁 <span>Files</span></a>
+          <a routerLink="/dashboard/kanban" class="mega-item">📋 <span>Kanban</span></a>
+          <a routerLink="/dashboard/products" class="mega-item">🛍️ <span>Products</span></a>
+          <a routerLink="/dashboard/blogs" class="mega-item">📝 <span>Blog</span></a>
+          <a routerLink="/dashboard/timeline" class="mega-item">⏱️ <span>Timeline</span></a>
+          <a routerLink="/dashboard/icons" class="mega-item">🎨 <span>Icons</span></a>
+          <a routerLink="/dashboard/charts" class="mega-item">📊 <span>Charts</span></a>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="relative">
+    <button
+      type="button"
+      class="btn-ghost p-2 rounded-full"
+      style="width: 36px; height: 36px; font-size: 1rem"
+      (click)="toggleLang($event)"
+      [attr.aria-label]="'Language ' + selectedLanguage()"
+    >
+      {{ selectedFlag() }}
+    </button>
+
+    @if (langOpen()) {
+      <div class="header-dropdown" style="right: 0; min-width: 140px" (click)="$event.stopPropagation()">
+        <button type="button" class="btn-dropdown-item" (click)="selectLang('🇬🇧', 'EN')">
+          <span style="font-size: 1.1rem">🇬🇧</span> English
+        </button>
+        <button type="button" class="btn-dropdown-item" (click)="selectLang('🇮🇹', 'IT')">
+          <span style="font-size: 1.1rem">🇮🇹</span> Italiano
+        </button>
+        <button type="button" class="btn-dropdown-item" (click)="selectLang('🇮🇷', 'FA')">
+          <span style="font-size: 1.1rem">🇮🇷</span> فارسی
+        </button>
+      </div>
+    }
+  </div>
+
+  <div class="relative">
+    <button
+      type="button"
+      class="btn-ghost p-2 rounded-full relative"
+      style="width: 36px; height: 36px"
+      (click)="toggleNotif($event)"
+      aria-label="Notifications"
+    >
+      <app-bell-icon />
+      <span class="absolute top-1 right-1 w-2 h-2 rounded-full" style="background: var(--error)"></span>
+    </button>
+
+    @if (notifOpen()) {
+      <div class="header-dropdown" style="right: 0; width: 300px" (click)="$event.stopPropagation()">
+        <div class="px-3 py-2 font-semibold text-sm" style="border-bottom: 1px solid var(--glass-border); color: var(--color-text)">
+          Notifications
+        </div>
+
+        <div class="notif-item">
+          <span class="notif-dot" style="background: var(--color-accent)"></span>
+          <div>
+            <p class="text-sm font-medium" style="color: var(--color-text)">New order received</p>
+            <p class="text-xs" style="color: var(--color-text-muted)">2 minutes ago</p>
+          </div>
+        </div>
+
+        <div class="notif-item">
+          <span class="notif-dot" style="background: var(--success)"></span>
+          <div>
+            <p class="text-sm font-medium" style="color: var(--color-text)">Payment confirmed</p>
+            <p class="text-xs" style="color: var(--color-text-muted)">15 minutes ago</p>
+          </div>
+        </div>
+
+        <div class="notif-item">
+          <span class="notif-dot" style="background: var(--star)"></span>
+          <div>
+            <p class="text-sm font-medium" style="color: var(--color-text)">Server update complete</p>
+            <p class="text-xs" style="color: var(--color-text-muted)">1 hour ago</p>
+          </div>
+        </div>
+
+        <div class="px-3 py-2 text-center" style="border-top: 1px solid var(--glass-border)">
+          <a routerLink="/dashboard/notifications" class="text-xs font-medium" style="color: var(--color-accent)">
+            View all notifications
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+
+ <app-theme-color />
+
+  <button
+    type="button"
+    class="btn-glass p-2 rounded-full"
+
+    (click)="openSettings()"
+    aria-label="Settings"
+  >
+    <app-gear-icon />
+  </button>
+
+  <div
+    class="relative"
+    style="border-left: 1px solid var(--glass-border); padding-left: 0.5rem; margin-left: 0.25rem"
+  >
+    <button
+      type="button"
+      class="flex items-center gap-2 btn-ghost rounded-lg px-2 py-1"
+      (click)="toggleUser($event)"
+    >
+      <div
+        class="w-8 h-8 rounded-full flex items-center justify-center"
+        style="background: var(--btn-bg); color: var(--btn-text); font-weight: 700; font-size: 0.75rem"
+      >
+        {{ userInitial() }}
+      </div>
+
+      <span class="text-sm font-medium hidden sm:block" style="color: var(--color-text)">
+        {{ userName() }}
+      </span>
+
+      <span>⌄</span>
+    </button>
+
+    @if (userOpen()) {
+      <div class="header-dropdown" style="right: 0; min-width: 180px" (click)="$event.stopPropagation()">
+        <div class="px-3 py-2" style="border-bottom: 1px solid var(--glass-border)">
+          <p class="text-sm font-semibold" style="color: var(--color-text)">{{ userName() }}</p>
+          <p class="text-xs" style="color: var(--color-text-muted)">{{ userEmail() }}</p>
+        </div>
+
+        <a routerLink="/dashboard/profile" class="btn-dropdown-item">👤 Profile</a>
+        <button type="button" class="btn-dropdown-item" (click)="openSettings()">
+          <app-gear-icon />
+        </button>
+
+        <div class="btn-dropdown-divider"></div>
+
+        <button
+          type="button"
+          class="btn-dropdown-item"
+          (click)="logout()"
+          style="color: var(--error)"
+        >
+          ⎋ Logout
+        </button>
+      </div>
+    }
+  </div>
+</div>

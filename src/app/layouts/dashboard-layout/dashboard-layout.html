@@ -1,1 +1,15 @@
-<router-outlet />
+
+<div class="mesh-bg"></div>
+<div id="app" class="dash-layout" [class.collapsed]="collapsed()">
+  <aside class="dash-sidebar" id="sidebar-container">
+    <app-left-menu-dynamic [navGroups]="navGroups" (collapsedChange)="collapsed.set($event)" />
+  </aside>
+  <div class="dash-main">
+    <header class="dash-topbar" id="topbar-container">
+      <app-header />
+    </header>
+    <main class="dash-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
