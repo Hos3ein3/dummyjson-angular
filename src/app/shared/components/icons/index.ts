@@ -17,3 +17,4 @@ export * from './lock-icon/lock-icon';
 export * from './dashboard-icon/dashboard-icon';
 export * from './home-icon/home-icon';
 export * from './eye-off-icon/eye-off-icon';
+export * from './logout-icon/logout-icon';

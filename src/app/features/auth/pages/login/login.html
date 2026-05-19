@@ -51,18 +51,23 @@
         </div>
 
         <!-- Error -->
-        <div id="login-error" class="hidden mb-4 p-3 rounded-xl text-sm" style="background: rgba(239,68,68,0.1); color: var(--error); border: 1px solid rgba(239,68,68,0.2);"></div>
+        <div id="login-error" class="mb-4 p-3 rounded-xl text-sm" [class.hidden]="!errorMessage()" style="background: rgba(239,68,68,0.1); color: var(--error); border: 1px solid rgba(239,68,68,0.2);">
+{{errorMessage()}}
+        </div>
 
         <!-- Submit -->
         <app-button [options]="ButtonOptions" >
-          <span id="login-btn-text">Sign In</span>
-          <span id="login-spinner" class="hidden">
-              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path   class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-              </svg>
-            </span>
+<!--          <span id="login-btn-text">Sign In</span>-->
+<!--          <span id="login-spinner" class="hidden">-->
+<!--              <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">-->
+<!--                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>-->
+<!--                <path   class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>-->
+<!--              </svg>-->
+<!--            </span>-->
         </app-button>
+<!--        <button class="btn-primary rounded-xl btn-loading ">-->
+<!--          Loading-->
+<!--        </button>-->
       </form>
 
       <!-- Divider -->

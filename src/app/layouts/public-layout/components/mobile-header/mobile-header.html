@@ -47,13 +47,38 @@
       Posts
     </a>
 
-    <button
-      type="button"
-      (click)="onLogout()"
-      class="btn-glass py-3 rounded-xl mt-6 text-center w-full"
-    >
-      Logout
-    </button>
+    @if(!authService.isAuthenticated())
+    {
+      <a
+        [routerLink]="UrlBuilder.route('auth','login')"
+        routerLinkActive="active"
+        class="nav-link"
+        (click)="onClose()"
+      >
+        Login
+      </a>
+      <a
+        [routerLink]="UrlBuilder.route('auth','signup')"
+        routerLinkActive="active"
+        class="nav-link"
+        (click)="onClose()"
+      >
+        Signup
+      </a>
+    } @else {
+      <a [routerLink]="UrlBuilder.route('dashboard','home')" class="btn-glass btn-danger py-3 rounded-xl mt-6 text-center w-full">
+        <app-dashboard-icon />
+      </a>
+      <button
+        type="button"
+        (click)="onLogout()"
+        class="btn-glass btn-danger py-3 rounded-xl mt-6 text-center w-full"
+      >
+       <app-logout-icon />
+
+      </button>
+    }
+
   </div>
 
 

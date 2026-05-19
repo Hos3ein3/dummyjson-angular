@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import {
   NavigationCancel,
   NavigationEnd,
@@ -10,22 +10,34 @@ import {
 import { FullpageLoader } from '@shared/components/fullpage-loader/fullpage-loader';
 import { Toast } from '@shared/components/toast/toast';
 import { Modal } from '@shared/components/modal/modal';
+import { AuthService } from '@shared/services/auth.service';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FullpageLoader, Toast,Modal],
+  imports: [RouterOutlet, FullpageLoader, Toast, Modal],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('dummyjson-angular');
-
+  private readonly authService = inject(AuthService);
   private router = inject(Router);
 
   isRouteLoading = signal(false);
 
+  ngOnInit() {
+
+    this.authService.tryRestoreSession().subscribe({
+      error: () => {
+
+      },
+    });
+
+  }
   constructor() {
+
+    this.authService.restoreFromStorage();
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.isRouteLoading.set(true);

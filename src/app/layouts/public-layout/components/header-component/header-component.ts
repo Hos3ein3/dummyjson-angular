@@ -1,16 +1,17 @@
-import { Component, signal ,inject} from '@angular/core';
+import { Component, signal, inject, effect } from '@angular/core';
 import { ThemeColor } from '@shared/components/theme-color/theme-color';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { UrlBuilder } from '@shared/utils/url-builder';
 import { MobileHeader } from '../mobile-header/mobile-header';
-import { DashboardIcon ,ClockIcon} from '@shared/components/icons';
+import { DashboardIcon, LogoutIcon } from '@shared/components/icons';
 import { ModalService } from '@shared/services/modal.service';
 import { ModalAction, ModalOptions } from '@shared/components/modal/modal';
 import { ButtonOptions } from '@shared/components/button/button';
+import { AuthService } from '@shared/services/auth.service';
 
 @Component({
   selector: 'app-public-header-component',
-  imports: [ThemeColor, RouterLink, RouterLinkActive, MobileHeader, DashboardIcon, ClockIcon],
+  imports: [ThemeColor, RouterLink, RouterLinkActive, MobileHeader, DashboardIcon, LogoutIcon],
   templateUrl: './header-component.html',
   styleUrl: './header-component.css',
 })
@@ -18,6 +19,15 @@ export class HeaderComponent {
   protected readonly UrlBuilder = UrlBuilder;
   mobileMenuOpen = signal(false);
   private readonly modalService = inject(ModalService);
+  protected readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  constructor() {
+    // effect(() => {
+    //   console.log('auth?', this.authService.isAuthenticated());
+    //   console.log('user', this.authService.currentUser());
+    //   console.log('refreshToken:', this.authService.refreshToken());
+    // });
+  }
 
   onToggleMobileMenu() {
     this.mobileMenuOpen.update((v) => !v);
@@ -29,11 +39,10 @@ export class HeaderComponent {
     console.log(this.mobileMenuOpen());
   }
 
-  openModalTest(): void {
+  onLogout(): void {
     const options = new ModalOptions({
-      title: 'small Modal',
-      message:
-        'Large modals are perfect for detailed content, data tables, or multi-section forms.',
+      title: 'Attention',
+      message: 'Do you want to logout?',
       size: 'sm',
       actions: [
         new ModalAction({
@@ -48,8 +57,8 @@ export class HeaderComponent {
         new ModalAction({
           id: 'save',
           button: new ButtonOptions({
-            label: 'Save',
-            variant: 'primary',
+            label: 'Logout',
+            variant: 'danger',
             size: 'sm',
           }),
           result: { confirmed: true, actionId: 'close' },
@@ -61,7 +70,8 @@ export class HeaderComponent {
 
     modalRef.afterClosed$.subscribe((result) => {
       if (result?.confirmed) {
-        console.log('Confirmed');
+        this.authService.logout();
+        this.router.navigate(['/']);
       }
     });
   }

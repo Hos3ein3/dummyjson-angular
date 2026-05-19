@@ -7,5 +7,9 @@ export const environment = {
   PostUrl: '/posts',
   RecipeUrl: '/recipes',
   QuoteUrl: '/quotes',
+  AuthUrl: '/auth',
+  LoginUrl: '/auth/login',
+  RefreshTokenUrl: 'auth/refresh',
+  CurrentUserUrl: '/auth/me',
   loaderDelayMs: 0,
 };

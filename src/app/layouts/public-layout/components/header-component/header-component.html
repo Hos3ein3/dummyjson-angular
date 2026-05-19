@@ -50,10 +50,23 @@
 <!--                </a>-->
 <!--                <button onclick="logout()" class="btn-glass px-3 py-1.5 rounded-full text-sm font-medium">Logout</button>-->
 <!--             -->
-                <a [routerLink]="UrlBuilder.route('auth','login')" class="hidden sm:inline-flex btn-glass px-4 py-1.5 rounded-full text-sm font-medium">Login</a>
-                <a [routerLink]="UrlBuilder.route('auth','signup')" class="hidden sm:inline-flex btn-primary px-4 py-1.5 rounded-full text-sm">Sign Up</a>
+          @if(!authService.isAuthenticated())
+          {
+            <a [routerLink]="UrlBuilder.route('auth','login')" class="hidden sm:inline-flex btn-glass px-4 py-1.5 rounded-full text-sm font-medium">Login</a>
+            <a [routerLink]="UrlBuilder.route('auth','signup')" class="hidden sm:inline-flex btn-primary px-4 py-1.5 rounded-full text-sm">Sign Up</a>
 
-          <app-dashboard-icon (click)="openModalTest()" />
+          } @else {
+
+            <a [routerLink]="UrlBuilder.route('dashboard','home')" class="btn-glass p-2  hidden sm:inline-flex btn-glass px-4 py-1.5 rounded-full text-sm font-medium">
+
+              <app-dashboard-icon />
+            </a>
+            <button type="button" class="btn-glass p-2 rounded-full hidden sm:inline-flex btn-glass px-4 py-1.5  text-sm font-medium">
+              <app-logout-icon (click)="onLogout()" />
+
+            </button>
+          }
+
 
           <!-- Mobile Menu Button -->
           <button

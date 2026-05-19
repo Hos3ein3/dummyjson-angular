@@ -1,11 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { EyeIcon, EyeOffIcon } from '@shared/components/icons';
 
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UrlBuilder } from '@shared/utils/url-builder';
 import { NgIf } from '@angular/common';
 import { Button,ButtonOptions, Label,LabelOptions, TextBox, TextboxOptions } from '@shared/components';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '@shared/services/auth.service';
+import { AuthUserModel } from '@core/models/authUser.model';
 
 @Component({
   selector: 'app-login',
@@ -15,8 +17,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 })
 export class Login {
   private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   readonly isSubmitting = signal(false);
-  errorMessage = '';
+  errorMessage = signal('');
   isShakeError = false;
 
   readonly form = this.fb.nonNullable.group({
@@ -24,24 +30,33 @@ export class Login {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
   onSubmit(): void {
-    console.log('Before validation');
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      console.log('In validation');
       this.triggerFormShake();
 
       return;
     }
-    console.log('After validation');
     this.isSubmitting.set(true);
-    this.errorMessage = '';
+    this.errorMessage.set('');
 
     const request = this.form.getRawValue();
     console.log(request);
+    const { username, password } = this.form.getRawValue();
+
+    this.authService.login(username, password).subscribe({
+      next: (response) => {
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
+        this.router.navigateByUrl(returnUrl);
+      },
+      error: (err) => {
+        this.triggerFormShake();
+        this.errorMessage.set(err.error.message);
+      },
+    });
   }
   triggerFormShake(): void {
     this.isShakeError = true;
-    console.log('in shaking');
+
     setTimeout(() => {
       this.isShakeError = true;
     }, 0);
@@ -57,7 +72,7 @@ export class Login {
     type: 'submit',
     variant: 'primary',
     cssClass: 'w-full py-3 rounded-xl text-base',
-    label: '',
+    label: 'Sign In',
   });
 
   protected readonly TextBoxOptions = new TextboxOptions({

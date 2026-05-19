@@ -1,13 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { UrlBuilder } from '@shared/utils/url-builder';
-import { EyeIcon } from '@shared/components/icons';
 import { Button, ButtonOptions, LabelOptions, TextBox, TextboxOptions } from '@shared/components';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-signup',
-  imports: [RouterLink, EyeIcon, TextBox, ReactiveFormsModule, Button],
+  imports: [RouterLink,  TextBox, ReactiveFormsModule, Button],
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
@@ -97,7 +96,7 @@ export class Signup {
     placeholder: 'Repeat your password',
     required: true,
     type: 'password',
-    label: new LabelOptions({ required: true, text: 'Password' }),
+    label: new LabelOptions({ required: true, text: 'Repeat Password' }),
   });
 
   protected readonly submitButtonOptions = new ButtonOptions({
